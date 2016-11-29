@@ -1,6 +1,6 @@
 {
-  "name": "electron-react-starter",
-  "productName": "electron-react-starter",
+  "name": "electron-react-file-management",
+  "productName": "electron-react-file-management",
   "version": "0.1.0",
   "description": "Based on Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
   "main": "main.js",
