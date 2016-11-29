@@ -3,6 +3,7 @@
 /* eslint arrow-body-style:0 */
 
 import React, { Component } from 'react';
+import { Notification } from 'react-notification';
 import shallowCompare from 'react-addons-shallow-compare';
 import Dropzone from 'react-dropzone';
 import ViewContainer from '../components/ViewContainer';
@@ -18,7 +19,8 @@ class Home extends Component {
   state = {
     files: null,
     animated: true,
-    viewEntersAnim: true
+    viewEntersAnim: true,
+    showNotification: true
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -88,8 +90,20 @@ class Home extends Component {
             </div>
           </div>
         </div>
+        <Notification
+          isActive={this.state.showNotification}
+          title="Title!"
+          message={'Notification'}
+          action={'Dismiss'}
+          onDismiss={this.onNotificationClick}
+          onClick={this.onNotificationClick}
+        />
       </ViewContainer>
     );
+  }
+
+  onNotificationClick = () => {
+    this.setState({ showNotification: false });
   }
 
   onDrop = files => {
