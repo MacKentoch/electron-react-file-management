@@ -27,7 +27,7 @@ class History extends Component {
           <div className="col-sm-12">
             <ViewTitle
               title={'History'}
-              faIconName={'fa-upload'}
+              faIconName={'fa-history'}
             />
             <div>
               content to add

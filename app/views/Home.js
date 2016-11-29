@@ -53,6 +53,7 @@ class Home extends Component {
                 <div
                   style={{
                     display: 'flex',
+                    flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'center'
                   }}>

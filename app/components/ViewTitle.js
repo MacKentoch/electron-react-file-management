@@ -6,7 +6,7 @@ import React, { PropTypes } from 'react';
 const ViewTitle = ({ title, faIconName }) => (
   <div
     className="page-header"
-    style={{ borderBottomColor: '#4A4A4A', marginTop: 5 }}>
+    style={{ borderBottomColor: '#4A4A4A', marginTop: 5, color: '#4A4A4A' }}>
     <h1>
       <i className={`fa ${faIconName}`} ariaHidden="true" />
       &nbsp;

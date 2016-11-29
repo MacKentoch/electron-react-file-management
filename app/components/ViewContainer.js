@@ -10,7 +10,8 @@ const ViewContainer = ({ children, animated, launchAnimation }) => (
       'view--content': true,
       animatedViews: animated,
       'view-enter': launchAnimation
-    })}>
+    })}
+    style={{ color: '#4A4A4A' }}>
     { children }
   </div>
 );
