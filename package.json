@@ -149,12 +149,13 @@
     "webpack-validator": "^2.2.9"
   },
   "dependencies": {
-    "animate.css": "^3.5.2",
+    "animatecss": "^3.5.2",
     "bootstrap": "^3.3.7",
     "classnames": "^2.2.5",
     "electron-debug": "^1.0.1",
     "font-awesome": "^4.7.0",
     "jquery": "^3.1.1",
+    "precss": "^1.4.0",
     "react": "^15.4.1",
     "react-addons-shallow-compare": "^15.4.1",
     "react-bootstrap": "^0.30.7",
@@ -166,7 +167,8 @@
     "react-router-redux": "^4.0.7",
     "redux": "^3.6.0",
     "redux-thunk": "^2.1.0",
-    "source-map-support": "^0.4.6"
+    "source-map-support": "^0.4.6",
+    "style-loader": "^0.13.1"
   },
   "devEngines": {
     "node": ">=6.x",

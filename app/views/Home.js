@@ -27,6 +27,7 @@ class Home extends Component {
       <div
         key="homeView"
         className={cx({
+          'view--content': true,
           'animatedViews': animated,
           'view-enter': viewEntersAnim
         })}>
@@ -40,17 +41,18 @@ class Home extends Component {
               <div>
                 <Dropzone
                   ref="dropzone"
+                  className="center-block"
                   style={
                     {
-                      width: '350px',
-                      height: '250px',
+                      width: '400px',
+                      height: '300px',
                       borderWidth: 2,
                       borderColor: '#f07d00',
                       borderStyle: 'dashed',
                       borderRadius: 5
                     }
                   }
-                  onDrop={this.onDrop} >
+                  onDrop={this.onDrop}>
                   <div>
                     Drop here files, or click this area to manually select files
                   </div>

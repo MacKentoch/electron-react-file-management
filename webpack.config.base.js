@@ -4,6 +4,7 @@
 import webpack from 'webpack';
 import path from 'path';
 import validate from 'webpack-validator';
+import precss from 'precss';
 import {
   dependencies as externals
 } from './app/package.json';
