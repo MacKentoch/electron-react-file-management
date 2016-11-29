@@ -1,7 +1,7 @@
 /**
  * Base webpack config used across other specific configs
  */
-
+import webpack from 'webpack';
 import path from 'path';
 import validate from 'webpack-validator';
 import {
@@ -34,7 +34,16 @@ export default validate({
     packageMains: ['webpack', 'browser', 'web', 'browserify', ['jam', 'main'], 'main']
   },
 
-  plugins: [],
+  plugins: [
+    getImplicitGlobals()
+  ],
 
   externals: Object.keys(externals || {})
 });
+
+function getImplicitGlobals() {
+  return new webpack.ProvidePlugin({
+    $: 'jquery',
+    jQuery: 'jquery'
+  });
+}
