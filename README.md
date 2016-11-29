@@ -1,4 +1,4 @@
-# electron-react-file-upload
+# electron-react-file-management
 
 electron react app based on [electron-react-boilerplate](https://github.com/chentsulin/electron-react-boilerplate).
 
