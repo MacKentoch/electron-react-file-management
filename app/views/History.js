@@ -30,7 +30,25 @@ class History extends Component {
               faIconName={'fa-history'}
             />
             <div>
-              content to add
+              <div className="list-group">
+                <a href="#" className="list-group-item active">
+                  <div
+                    style={{ height: '40px', width: '40px', backgroundColor: '#F1F2F3', marginRight: '10px'}}
+                    className="pull-left">
+                    test
+                  </div>
+                  <h4 className="list-group-item-heading">First List Group Item Heading</h4>
+                  <p className="list-group-item-text">List Group Item Text</p>
+                </a>
+                <a href="#" className="list-group-item">
+                  <h4 className="list-group-item-heading">Second List Group Item Heading</h4>
+                  <p className="list-group-item-text">List Group Item Text</p>
+                </a>
+                <a href="#" className="list-group-item">
+                  <h4 className="list-group-item-heading">Third List Group Item Heading</h4>
+                  <p className="list-group-item-text">List Group Item Text</p>
+                </a>
+              </div>
             </div>
           </div>
         </div>
