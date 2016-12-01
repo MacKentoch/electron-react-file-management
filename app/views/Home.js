@@ -1,20 +1,18 @@
 /* eslint react/jsx-closing-bracket-location:0 */
 /* eslint react/sort-comp:0 */
 /* eslint arrow-body-style:0 */
-
 import React, { Component } from 'react';
-import { Notification } from 'react-notification';
 import shallowCompare from 'react-addons-shallow-compare';
 import Dropzone from 'react-dropzone';
 import ViewContainer from '../components/ViewContainer';
 import ViewTitle from '../components/ViewTitle';
-
+import ListFiles from '../components/listFiles/ListFiles';
 
 const fs = require('fs');
 const path = require('path');
 
 class Home extends Component {
-  defaultPartage = 'D:\\TODEL';
+  defaultPartage = '~/fileStore';// 'D:\\TODEL';
 
   state = {
     files: null,
@@ -49,66 +47,62 @@ class Home extends Component {
                   borderWidth: 2,
                   borderColor: '#f07d00',
                   borderStyle: 'dashed',
-                  borderRadius: 5
+                  borderRadius: 5,
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
                 }}
                 onDrop={this.onDrop}>
                 <div
                   style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center'
+                    flex: 1,
+                    display: 'flex'
                   }}>
-                  <div>
-                    Drop here files, or click this area to manually select files
+                  <div
+                    style={{
+                      flex: 1,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center'
+                    }}>
+                    <i>
+                      Drop here files, or click this area to manually select files
+                    </i>
                   </div>
                 </div>
               </Dropzone>
-              {
+              <div
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}>
+                {
                 files
                 ?
-                  <div>
-                    {
-                      files.length === 0
-                      ?
-                        <h2>
-                          Upload done.
-                        </h2>
-                      :
-                        <h2>
-                          Uploading {files.length} files...
-                        </h2>
-                    }
-                    <div>
-                      {
-                        files.map((file, fileIdx) => <img key={fileIdx} alt="" src={file.preview} />)
-                      }
-                    </div>
-                  </div>
-              : null
-            }
+                  <ListFiles
+                    files={files}
+                  />
+                :
+                  null
+              }
+              </div>
             </div>
           </div>
         </div>
-        <Notification
-          isActive={this.state.showNotification}
-          title="Title!"
-          message={'Notification'}
-          action={'Dismiss'}
-          onDismiss={this.onNotificationClick}
-          onClick={this.onNotificationClick}
-        />
       </ViewContainer>
     );
   }
 
-  onNotificationClick = () => {
-    this.setState({ showNotification: false });
-  }
+  onDrop = newFiles => {
+    const { files } = this.state;
+    if (files) {
+      this.setState({ files: [...files, ...newFiles] });
+    } else {
+      this.setState({ files: [...newFiles] });
+    }
 
-  onDrop = files => {
-    this.setState({ files });
-    this.saveToDisk(files);
+    this.saveToDisk(newFiles);
   }
 
   onOpenClick = () => {
@@ -121,7 +115,7 @@ class Home extends Component {
       this.writeFile(file, filePath)
         .then(
           () => {
-            const newListOfFiles = [...this.state.files].filter(fil => fil.name !== file.name);
+            const newListOfFiles = [...this.state.files]; //.filter(fil => fil.name !== file.name);
             this.setState({ files: newListOfFiles });
             return true;
           }

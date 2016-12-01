@@ -6229,6 +6229,10 @@ react-bootstrap:
     uncontrollable "^4.0.1"
     warning "^3.0.0"
 
+react-collapse:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/react-collapse/-/react-collapse-2.3.3.tgz#68c70f1fceeaf375e3599b95710cc51e5dd339a3"
+
 react-deep-force-update@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-1.0.1.tgz#f911b5be1d2a6fe387507dd6e9a767aa2924b4c7"
@@ -6253,10 +6257,6 @@ react-motion:
   dependencies:
     performance-now "^0.2.0"
     raf "^3.1.0"
-
-react-notification:
-  version "6.5.1"
-  resolved "https://registry.yarnpkg.com/react-notification/-/react-notification-6.5.1.tgz#781b2d78f40af0c9d792ca4cd8d2f58784d87c3a"
 
 react-overlays@^0.6.10:
   version "0.6.10"

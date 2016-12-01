@@ -8,7 +8,7 @@ const ViewTitle = ({ title, faIconName }) => (
     className="page-header"
     style={{ borderBottomColor: '#4A4A4A', marginTop: 5, color: '#4A4A4A' }}>
     <h1>
-      <i className={`fa ${faIconName}`} ariaHidden="true" />
+      <i className={`fa ${faIconName}`} aria-hidden="true" />
       &nbsp;
       {title}
     </h1>
