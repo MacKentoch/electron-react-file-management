@@ -5,23 +5,21 @@
 import React, { Component, PropTypes } from 'react';
 import shallowCompare from 'react-addons-shallow-compare';
 import appConfig from '../../config';
-import { Motion, spring, presets } from 'react-motion';
+// import { Motion, spring, presets } from 'react-motion';
 import FileExtension from './FileExtension';
 import FileName from './FileName';
 import FileSize from './FileSize';
+import FileRemove from './FileRemove';
+
 
 class File extends Component {
-  state = {
-    showActions: false
-  }
 
   shouldComponentUpdate(nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState);
   }
 
   render() {
-    const { type, name, size } = this.props;
-    const { showActions } = this.state;
+    const { type, name, size, fileIndex } = this.props;
 
     return (
       <a
@@ -37,7 +35,6 @@ class File extends Component {
           flexDirection: 'column',
           borderRadius: '0px'
         }}>
-        {/* file description */}
         <div
           style={{
             flex: 1,
@@ -56,54 +53,19 @@ class File extends Component {
             <FileName fileName={name} />
             <FileSize fileSize={size} />
           </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'flex-start',
-              fontSize: '16px',
-              color: '#F1F1F1',
-            }}>
-            <i className="fa fa-trash-o" />
-          </div>
-        </div>
-        {/* actions */}
-        <div
-          style={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center'
-          }}>
-          <Motion
-            defaultStyle={{ y: 0 }}
-            style={{
-              y: spring(showActions ? 40 : 0)
-            }}>
-            {
-              ({ y }) => (
-                <div
-                  style={{
-                    flex: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'flex-end',
-                    height: y,
-                    color: '#F1F2F3'
-                  }}>
-                </div>
-              )
-            }
-          </Motion>
+          <FileRemove
+            fileIndex={fileIndex}
+            onClick={this.handlesOnRemoveClick}
+          />
         </div>
       </a>
     );
   }
 
-  handlesOnFileClick = event => {
+  handlesOnRemoveClick = fileIdx => {
     event.preventDefault();
-    this.setState({ showActions: !this.state.showActions });
+    const { onFileRemove } = this.props;
+    onFileRemove(fileIdx);
   }
 }
 
@@ -111,7 +73,9 @@ File.propTypes = {
   type: PropTypes.oneOf(appConfig.fileMimeTypes),
   name: PropTypes.string.isRequired,
   // filePath: PropTypes.string,
-  size: PropTypes.any.isRequired
+  size: PropTypes.any.isRequired,
+  fileIndex: PropTypes.number.isRequired,
+  onFileRemove: PropTypes.func.isRequired
 };
 
 File.defaultProps = {

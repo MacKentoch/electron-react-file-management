@@ -14,7 +14,7 @@ class ListFiles extends Component {
   }
 
   render() {
-    const { files } = this.props;
+    const { files, onFileRemove } = this.props;
 
     return (
       <div
@@ -43,10 +43,12 @@ class ListFiles extends Component {
               ({ name, type, filePath, size }, fileIdx) => (
                 <File
                   key={fileIdx}
+                  fileIndex={fileIdx}
                   name={name}
                   type={type}
                   filePath={filePath}
                   size={size}
+                  onFileRemove={onFileRemove}
                 />
               )
             )
@@ -66,7 +68,8 @@ ListFiles.propTypes = {
       filePath: PropTypes.string,
       size: PropTypes.any.isRequired
     })
-  )
+  ),
+  onFileRemove: PropTypes.func.isRequired
 };
 
 export default ListFiles;

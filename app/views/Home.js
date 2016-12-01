@@ -82,6 +82,7 @@ class Home extends Component {
                 ?
                   <ListFiles
                     files={files}
+                    onFileRemove={this.handlesOnFileRemove}
                   />
                 :
                   null
@@ -94,6 +95,13 @@ class Home extends Component {
     );
   }
 
+  handlesOnFileRemove = fileIndex => {
+    const { files } = this.state;
+    if (files) {
+      this.setState({ files: files.filter((_, idx) => idx !== fileIndex) });
+    }
+  }
+
   onDrop = newFiles => {
     const { files } = this.state;
     if (files) {
@@ -101,8 +109,7 @@ class Home extends Component {
     } else {
       this.setState({ files: [...newFiles] });
     }
-
-    this.saveToDisk(newFiles);
+    // this.saveToDisk(newFiles);
   }
 
   onOpenClick = () => {
