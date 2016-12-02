@@ -15,20 +15,21 @@ class FileRemove extends Component {
 
   render() {
     return (
-      <a
-        onClick={this.handlesOnClick}
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          fontSize: '16px',
-          color: '#F1F1F1',
-          padding: '5px'
-        }}>
-
-        <i className="fa fa-trash-o" />
-      </a>
+      <div>
+        <a
+          onClick={this.handlesOnClick}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            fontSize: '16px',
+            color: '#F1F1F1',
+            padding: '5px'
+          }}>
+          <i className="fa fa-trash-o" />
+        </a>
+      </div>
     );
   }
 

@@ -30,11 +30,11 @@ class FileSize extends Component {
 }
 
 FileSize.propTypes = {
-  fileSize: PropTypes.string
+  fileSize: PropTypes.number
 };
 
 FileSize.defaultProps = {
-  fileSize: '0 kb'
+  fileSize: 0
 };
 
 export default FileSize;

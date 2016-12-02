@@ -19,9 +19,12 @@ class File extends Component {
   }
 
   render() {
-    const { type, name, size, fileIndex } = this.props;
+    const { type, name, size, fileIndex, style } = this.props;
 
     return (
+      <div>
+
+
       <a
         onClick={this.handlesOnFileClick}
         className="list-group-item"
@@ -33,7 +36,8 @@ class File extends Component {
           flex: 1,
           display: 'flex',
           flexDirection: 'column',
-          borderRadius: '0px'
+          borderRadius: '0px',
+          ...style
         }}>
         <div
           style={{
@@ -59,6 +63,7 @@ class File extends Component {
           />
         </div>
       </a>
+      </div>
     );
   }
 
@@ -70,12 +75,13 @@ class File extends Component {
 }
 
 File.propTypes = {
-  type: PropTypes.oneOf(appConfig.fileMimeTypes),
+  type: PropTypes.string,
   name: PropTypes.string.isRequired,
   // filePath: PropTypes.string,
   size: PropTypes.any.isRequired,
   fileIndex: PropTypes.number.isRequired,
-  onFileRemove: PropTypes.func.isRequired
+  onFileRemove: PropTypes.func.isRequired,
+  style: PropTypes.any
 };
 
 File.defaultProps = {
