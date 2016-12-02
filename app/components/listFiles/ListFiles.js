@@ -40,7 +40,12 @@ class ListFiles extends Component {
             styles={
               files.map((file, fileIdx) => ({
                 key: String(fileIdx),
-                data: { ...file },
+                data: {
+                  type: file.type,
+                  name: file.name,
+                  filePath: file.filePath,
+                  size: file.size
+                },
                 style: {
                   height: spring(60, presets.gentle),
                   opacity: spring(1, presets.gentle)
