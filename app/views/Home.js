@@ -1,7 +1,8 @@
 /* eslint react/jsx-closing-bracket-location:0 */
 /* eslint react/sort-comp:0 */
 /* eslint arrow-body-style:0 */
-import React, { Component } from 'react';
+/* eslint react/no-unused-prop-types:0 */
+import React, { Component, PropTypes } from 'react';
 import shallowCompare from 'react-addons-shallow-compare';
 import Dropzone from 'react-dropzone';
 import ViewContainer from '../components/ViewContainer';
@@ -21,12 +22,24 @@ class Home extends Component {
     showNotification: true
   };
 
+  componentWillMount() {
+    const { actions: { enterHome } } = this.props;
+    enterHome();
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState);
   }
 
+  componentWillUnmount() {
+    const { actions: { leaveHome } } = this.props;
+    leaveHome();
+  }
+
   render() {
     const { animated, viewEntersAnim, files } = this.state;
+    const currentNbFiles = files && files.length ? files.length : 0;
+
     return (
       <ViewContainer
         animated={animated}
@@ -75,18 +88,42 @@ class Home extends Component {
                 style={{
                   flex: 1,
                   display: 'flex',
+                  alignItems: 'center',
                   flexDirection: 'column'
                 }}>
+                <div>
+                  <button
+                    className="btn btn-primary"
+                    style={{
+                      marginTop: 20,
+                      width: 400
+                    }}
+                    disabled={currentNbFiles === 0}>
+                    {
+                      currentNbFiles > 0
+                      ?
+                        <span>
+                          <i className="fa fa-floppy-o" />&nbsp;
+                          Save files
+                        </span>
+                      :
+                        <span>
+                          <i className="fa fa-info-circle" />&nbsp;
+                          Add files to save
+                        </span>
+                    }
+                  </button>
+                </div>
                 {
-                files
-                ?
-                  <ListFiles
-                    files={files}
-                    onFileRemove={this.handlesOnFileRemove}
-                  />
-                :
-                  null
-              }
+                  files
+                  ?
+                    <ListFiles
+                      files={files}
+                      onFileRemove={this.handlesOnFileRemove}
+                    />
+                  :
+                    null
+                }
               </div>
             </div>
           </div>
@@ -122,7 +159,7 @@ class Home extends Component {
       this.writeFile(file, filePath)
         .then(
           () => {
-            const newListOfFiles = [...this.state.files]; //.filter(fil => fil.name !== file.name);
+            const newListOfFiles = [...this.state.files].filter(fil => fil.name !== file.name);
             this.setState({ files: newListOfFiles });
             return true;
           }
@@ -150,5 +187,13 @@ class Home extends Component {
     );
   }
 }
+
+Home.propTypes = {
+  currentView: PropTypes.string.isRequired,
+  actions: {
+    enterHome: PropTypes.func.isRequired,
+    leaveHome: PropTypes.func.isRequired
+  }
+};
 
 export default Home;

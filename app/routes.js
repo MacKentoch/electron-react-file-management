@@ -2,8 +2,8 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 import App from './containers/App';
-import HomePage from './views/Home';
-import HistoryPage from './views/History';
+import HomePage from './containers/Home';
+import HistoryPage from './containers/History';
 
 
 export default (

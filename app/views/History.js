@@ -1,8 +1,8 @@
 /* eslint react/jsx-closing-bracket-location:0 */
 /* eslint react/sort-comp:0 */
 /* eslint arrow-body-style:0 */
-
-import React, { Component } from 'react';
+/* eslint react/no-unused-prop-types:0 */
+import React, { Component, PropTypes } from 'react';
 import shallowCompare from 'react-addons-shallow-compare';
 import ViewContainer from '../components/ViewContainer';
 import ViewTitle from '../components/ViewTitle';
@@ -13,8 +13,18 @@ class History extends Component {
     viewEntersAnim: true
   };
 
+  componentWillMount() {
+    const { actions: { enterHistory } } = this.props;
+    enterHistory();
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState);
+  }
+
+  componentWillUnmount() {
+    const { actions: { leaveHistory } } = this.props;
+    leaveHistory();
   }
 
   render() {
@@ -56,5 +66,13 @@ class History extends Component {
     );
   }
 }
+
+History.propTypes = {
+  currentView: PropTypes.string.isRequired,
+  actions: {
+    enterHistory: PropTypes.func.isRequired,
+    leaveHistory: PropTypes.func.isRequired
+  }
+};
 
 export default History;

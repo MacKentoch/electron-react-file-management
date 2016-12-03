@@ -4,7 +4,6 @@
 import React, { Component, PropTypes } from 'react';
 import shallowCompare from 'react-addons-shallow-compare';
 import { TransitionMotion, spring, presets } from 'react-motion';
-import appConfig from '../../config';
 import File from './File';
 
 
@@ -134,8 +133,8 @@ class ListFiles extends Component {
 
   willLeave = () => {
     return {
-      height: spring(0),
-      opacity: spring(0)
+      height: spring(0, presets.gentle),
+      opacity: spring(0, presets.gentle)
     };
   }
 }

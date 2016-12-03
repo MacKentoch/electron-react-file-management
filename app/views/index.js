@@ -1,9 +1,7 @@
-import About      from './about/About';
-import Home       from './home/Home';
-import Components from './components/Components';
+import Home from './Home';
+import History from './History';
 
 export {
-  About,
   Home,
-  Components
+  History
 };

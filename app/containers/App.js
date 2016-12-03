@@ -1,13 +1,16 @@
+/* eslint react/jsx-closing-bracket-location:0 */
+/* eslint react/sort-comp:0 */
+/* eslint arrow-body-style:0 */
+/* eslint react/forbid-prop-types:0 */
+/* eslint jsx-a11y/href-no-hash:0 */
+
 import React, {
   Component,
   PropTypes
-}                         from 'react';
-// import {
-//   BackToTop
-// }                         from '../components';
-import { sidemenuModel }  from '../models/sidemenu';
-import { Link }           from 'react-router';
-import cx                 from 'classnames';
+} from 'react';
+import { Link } from 'react-router';
+import cx from 'classnames';
+import { sidemenuModel } from '../models/sidemenu';
 
 class App extends Component {
   state = {
@@ -22,7 +25,7 @@ class App extends Component {
     return (
       <div
         id="wrapper"
-        style={{overflow: 'auto'}}
+        style={{ overflow: 'auto' }}
         className={
           cx({
             active: sideMenuToogled
@@ -33,17 +36,17 @@ class App extends Component {
           <ul
             id="sidebar_menu"
             className="sidebar-nav">
-             <li className="sidebar-brand">
-               <a
-                 id="menu-toggle"
-                 href="#"
-                 onClick={this.handlesOnMenuToggleClick}>
-                 Menu
-                 <i
-                   id="main_icon"
-                   className="fa fa-bars"
-                   aria-hidden="true"
-                 />
+            <li className="sidebar-brand">
+              <a
+                id="menu-toggle"
+                href="#"
+                onClick={this.handlesOnMenuToggleClick}>
+                Menu
+               <i
+                 id="main_icon"
+                 className="fa fa-bars"
+                 aria-hidden="true"
+               />
               </a>
             </li>
           </ul>
@@ -52,14 +55,14 @@ class App extends Component {
             id="sidebar">
             {
               navModel.map(
-                ({id, text, linkTo, fontIconName}, navItemIdx) => (
+                ({ id, text, linkTo, fontIconName }, navItemIdx) => (
                   <li key={navItemIdx}>
                     <Link to={linkTo}>
                       <span>
                         {text}
                       </span>
                       <i
-                        className={`sub_icon fa fa-home ${fontIconName ? fontIconName : 'fa-link'}`}
+                        className={`sub_icon fa fa-home ${fontIconName || 'fa-link'}`}
                         aria-hidden="true"
                       />
                       {/* <span className="sub_icon glyphicon glyphicon-link" /> */}
@@ -88,7 +91,7 @@ class App extends Component {
 
   handlesOnMenuToggleClick = event => {
     event.preventDefault();
-    this.setState({sideMenuToogled: !this.state.sideMenuToogled});
+    this.setState({ sideMenuToogled: !this.state.sideMenuToogled });
   }
   /* eslint-disable no-unused-vars*/
   handleLeftNavItemClick = (event, viewName) => {
@@ -104,8 +107,8 @@ class App extends Component {
 // statics :
 App.propTypes = {
   children: PropTypes.node,
-  history:  PropTypes.object,
-  location: PropTypes.object
+  // history: PropTypes.object,
+  // location: PropTypes.object
 };
 
 export default App;

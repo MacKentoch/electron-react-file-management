@@ -1,3 +1,4 @@
+import { Map } from 'immutable';
 import moment from 'moment';
 
 const dateFormat = 'DD/MM/YYYY HH:mm';
@@ -7,50 +8,49 @@ const dateFormat = 'DD/MM/YYYY HH:mm';
 // /////////////////////
 const ENTER_HOME_VIEW = 'ENTER_HOME_VIEW';
 const LEAVE_HOME_VIEW = 'LEAVE_HOME_VIEW';
-const ENTER_COMPONENTS_VIEW = 'ENTER_COMPONENTS_VIEW';
-const LEAVE_COMPONENTS_VIEW = 'LEAVE_COMPONENTS_VIEW';
-const ENTER_ABOUT_VIEW = 'ENTER_ABOUT_VIEW';
-const LEAVE_ABOUT_VIEW = 'LEAVE_ABOUT_VIEW';
+const ENTER_HISTORY_VIEW = 'ENTER_HISTORY_VIEW';
+const LEAVE_HISTORY_VIEW = 'LEAVE_HISTORY_VIEW';
 
 
 // /////////////////////
 // reducer
 // /////////////////////
-const initialState = {
+const initialState = Map({
   currentView: 'not set',
   enterTime: null,
   leaveTime: null
-};
+});
 
 export default function (state = initialState, action) {
   const currentTime = moment().format(dateFormat);
   switch (action.type) {
 
     case ENTER_HOME_VIEW:
-    case ENTER_COMPONENTS_VIEW:
-    case ENTER_ABOUT_VIEW:
+    case ENTER_HISTORY_VIEW:
       // can't enter if you are already inside
-      if (state.currentView !== action.currentView) {
-        return {
-          ...state,
+      if (state.get('currentView') !== action.currentView) {
+        // return state.withMutations(
+        //   state => {
+        //     state.set('currentView', action.currentView);
+        //     state.set('enterTime', currentTime)
+        //     state.set('leaveTime', currentTime);
+        //   }
+        // );
+        return state.merge({
           currentView: action.currentView,
           enterTime: currentTime,
-          leaveTime: currentTime
-        };
+        });
       }
       return state;
 
     case LEAVE_HOME_VIEW:
-    case LEAVE_COMPONENTS_VIEW:
-    case LEAVE_ABOUT_VIEW:
+    case LEAVE_HISTORY_VIEW:
       // can't leave if you aren't already inside
-      if (state.currentView === action.currentView) {
-        return {
-          ...state,
+      if (state.get('currentView') === action.currentView) {
+        return state.merge({
           currentView: action.currentView,
-          enterTime: currentTime,
           leaveTime: currentTime
-        };
+        });
       }
       return state;
 
@@ -77,30 +77,16 @@ export function leaveHome() {
   };
 }
 
-export function enterComponents() {
+export function enterHistory() {
   return {
-    type: ENTER_COMPONENTS_VIEW,
-    currentView: 'components'
+    type: ENTER_HISTORY_VIEW,
+    currentView: 'history'
   };
 }
 
-export function leaveComponents() {
+export function leaveHistory() {
   return {
-    type: LEAVE_COMPONENTS_VIEW,
-    currentView: 'components'
-  };
-}
-
-export function enterAbout() {
-  return {
-    type: ENTER_ABOUT_VIEW,
-    currentView: 'about'
-  };
-}
-
-export function leaveAbout() {
-  return {
-    type: LEAVE_ABOUT_VIEW,
-    currentView: 'about'
+    type: LEAVE_HISTORY_VIEW,
+    currentView: 'history'
   };
 }
