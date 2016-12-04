@@ -18,6 +18,7 @@ const CONFIRM_WRITE_FILE = 'CONFIRM_WRITE_FILE';
 const ERROR_WRITE_FILE = 'ERROR_WRITE_FILE';
 
 const SET_FILE_PATH = 'SET_FILE_PATH';
+const CLEAR_FILE_ERRORS = 'CLEAR_FILE_ERRORS';
 
 // /////////////////////
 // reducer
@@ -29,6 +30,7 @@ const initialState = Map({
   // filePath:
   filePath: null,
   writingFiles: List(),
+  writeFileError: List(),
   // histo:
   histoFiles: List()
 });
@@ -58,15 +60,20 @@ export default function (state = initialState, action) {
 
     case REQUIRE_WRITE_FILE:
       return state.merge({
-        writingFiles: state.get('writingFiles').concat(action.file),
+        writingFiles: state.get('writingFiles').push(action.file)
       });
     case CONFIRM_WRITE_FILE:
       return state.merge({
-        writingFiles: state.get('writingFiles').filter(file => file.name !== action.file.name),
+        writingFiles: state.get('writingFiles').filter(file => file.name !== action.file.name)
       });
     case ERROR_WRITE_FILE:
       return state.merge({
         writingFiles: state.get('writingFiles').filter(file => file.name !== action.file.name),
+        writeFileError: state.get('writeFileError').push(action.details)
+      });
+    case CLEAR_FILE_ERRORS:
+      return state.merge({
+        writeFileError: state.get('writeFileError').clear()
       });
 
     default:
@@ -83,6 +90,12 @@ export function addfiles(files = List()) {
   return {
     type: ADD_NEW_FILES,
     files
+  };
+}
+
+export function clearFileErrors() {
+  return {
+    type: CLEAR_FILE_ERRORS
   };
 }
 
@@ -116,17 +129,19 @@ function requireWriteFile(file) {
   };
 }
 
-function confirmWriteFile(file) {
+function confirmWriteFile(file, filePath = '') {
   return {
     type: CONFIRM_WRITE_FILE,
-    file
+    file,
+    filePath
   };
 }
 
-function errorWriteFile(file) {
+function errorWriteFile(file, details = '') {
   return {
     type: ERROR_WRITE_FILE,
-    file
+    file,
+    details
   };
 }
 
@@ -148,12 +163,12 @@ export function writeFile(file = null, filePath = null) {
         fs.writeFile(filePath, file,
           err => {
             if (err) {
-              dispatch(errorWriteFile(file));
-              const error = { error: `writeFile failed. More details: ${err.message}` };
-              return reject(error);
+              return reject({
+                file,
+                details: err.message
+              });
             }
-            dispatch(confirmWriteFile(file));
-            return resolve({ fileName: file.name, filePath });
+            return resolve({ file, filePath });
           }
         );
       }
@@ -170,13 +185,14 @@ export function writeFiles(files = List([])) {
         const allFilePath = path.join(filePath, file.name);
         dispatch(writeFile(file, allFilePath))
           .then(
-            () => dispatch(removeFileByFileName(file.name))
+            successPayload => {
+              dispatch(confirmWriteFile(successPayload.file, successPayload.filePath));
+              dispatch(removeFileByFileName(file.name));
+              return true;
+            }
           )
           .catch(
-            err => {
-              return dispatch(errorWriteFile(err));
-              // throw new Error(err);
-            }
+            errorPayload => dispatch(errorWriteFile(errorPayload.file, errorPayload.details))
           );
       });
   };

@@ -28,6 +28,7 @@ const mapDispatchToProps = (dispatch) => {
         // files:
         setFilePath: filesActions.setFilePath,
         addfiles: filesActions.addfiles,
+        clearFileErrors: filesActions.clearFileErrors,
         removeFileByIndex: filesActions.removeFileByIndex,
         removeFileByFileName: filesActions.removeFileByFileName,
         writeFiles: filesActions.writeFiles
