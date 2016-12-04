@@ -2,9 +2,9 @@
 /* eslint react/sort-comp:0 */
 /* eslint arrow-body-style:0 */
 /* eslint react/no-unused-prop-types:0 */
-import React, { Component, PropTypes } from 'react';
-import shallowCompare from 'react-addons-shallow-compare';
+import React, { PureComponent, PropTypes } from 'react';
 import Dropzone from 'react-dropzone';
+import { List, fromJS } from 'immutable';
 import ViewContainer from '../components/ViewContainer';
 import ViewTitle from '../components/ViewTitle';
 import ListFiles from '../components/listFiles/ListFiles';
@@ -12,23 +12,20 @@ import ListFiles from '../components/listFiles/ListFiles';
 const fs = require('fs');
 const path = require('path');
 
-class Home extends Component {
+class Home extends PureComponent {
   defaultPartage = '~/fileStore';// 'D:\\TODEL';
 
   state = {
-    files: null,
+    // files: null,
     animated: true,
     viewEntersAnim: true,
     showNotification: true
   };
 
   componentWillMount() {
-    const { actions: { enterHome } } = this.props;
+    const { actions: { enterHome, setFilePath } } = this.props;
     enterHome();
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState);
+    setFilePath(this.defaultPartage);
   }
 
   componentWillUnmount() {
@@ -37,8 +34,9 @@ class Home extends Component {
   }
 
   render() {
-    const { animated, viewEntersAnim, files } = this.state;
-    const currentNbFiles = files && files.length ? files.length : 0;
+    const { animated, viewEntersAnim } = this.state;
+    const { files } = this.props;
+    const currentNbFiles = files && files.size ? files.size : 0;
 
     return (
       <ViewContainer
@@ -98,7 +96,8 @@ class Home extends Component {
                       marginTop: 20,
                       width: 400
                     }}
-                    disabled={currentNbFiles === 0}>
+                    disabled={currentNbFiles === 0}
+                    onClick={this.saveFiles}>
                     {
                       currentNbFiles > 0
                       ?
@@ -118,7 +117,7 @@ class Home extends Component {
                   files
                   ?
                     <ListFiles
-                      files={files}
+                      files={files.toJS()}
                       onFileRemove={this.handlesOnFileRemove}
                     />
                   :
@@ -133,67 +132,82 @@ class Home extends Component {
   }
 
   handlesOnFileRemove = fileIndex => {
-    const { files } = this.state;
-    if (files) {
-      this.setState({ files: files.filter((_, idx) => idx !== fileIndex) });
-    }
+    const { actions: { removeFileByIndex } } = this.props;
+    removeFileByIndex(fileIndex);
   }
 
   onDrop = newFiles => {
-    const { files } = this.state;
-    if (files) {
-      this.setState({ files: [...files, ...newFiles] });
-    } else {
-      this.setState({ files: [...newFiles] });
-    }
-    // this.saveToDisk(newFiles);
+    const { actions: { addfiles } } = this.props;
+    const immutableFiles = fromJS(newFiles);
+
+    addfiles(immutableFiles);
+    // writeFiles(immutableFiles);
+  }
+
+  saveFiles = (event) => {
+    event.preventDefault();
+    const { files, actions: { writeFiles } } = this.props;
+    writeFiles(files);
   }
 
   onOpenClick = () => {
     this.dropzone.open();
   }
 
-  saveToDisk = files => {
-    files.forEach((file) => {
-      const filePath = path.join(this.defaultPartage, file.name);
-      this.writeFile(file, filePath)
-        .then(
-          () => {
-            const newListOfFiles = [...this.state.files].filter(fil => fil.name !== file.name);
-            this.setState({ files: newListOfFiles });
-            return true;
-          }
-        )
-        .catch(
-          err => {
-            throw new Error(err);
-          }
-        );
-    });
-  }
+  // saveToDisk = files => {
+  //   files.forEach((file) => {
+  //     const filePath = path.join(this.defaultPartage, file.name);
+  //     this.writeFile(file, filePath)
+  //       .then(
+  //         () => {
+  //           const newListOfFiles = [...this.state.files].filter(fil => fil.name !== file.name);
+  //           this.setState({ files: newListOfFiles });
+  //           return true;
+  //         }
+  //       )
+  //       .catch(
+  //         err => {
+  //           throw new Error(err);
+  //         }
+  //       );
+  //   });
+  // }
 
-  writeFile = (file, filePath) => {
-    return new Promise(
-      (resolve, reject) => {
-        fs.writeFile(filePath, file,
-          err => {
-            if (err) {
-              return reject(err);
-            }
-            return resolve({ file: file.name });
-          }
-        );
-      }
-    );
-  }
+  // writeFile = (file, filePath) => {
+  //   return new Promise(
+  //     (resolve, reject) => {
+  //       fs.writeFile(filePath, file,
+  //         err => {
+  //           if (err) {
+  //             return reject(err);
+  //           }
+  //           return resolve({ file: file.name });
+  //         }
+  //       );
+  //     }
+  //   );
+  // }
 }
 
 Home.propTypes = {
+  // views:
   currentView: PropTypes.string.isRequired,
-  actions: {
+  // files:
+  filePath: PropTypes.string,
+  lastUploadTime: PropTypes.string,
+  files: PropTypes.instanceOf(List),
+
+  actions: PropTypes.shape({
+    // views:
     enterHome: PropTypes.func.isRequired,
-    leaveHome: PropTypes.func.isRequired
-  }
+    leaveHome: PropTypes.func.isRequired,
+    // files:
+    setFilePath: PropTypes.func.isRequired,
+    addfiles: PropTypes.func.isRequired,
+    removeFileByIndex: PropTypes.func.isRequired,
+    removeFileByFileName: PropTypes.func.isRequired,
+    writeFiles: PropTypes.func.isRequired
+  }).isRequired
 };
 
 export default Home;

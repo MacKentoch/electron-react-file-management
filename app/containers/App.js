@@ -9,13 +9,14 @@ import React, {
   PropTypes
 } from 'react';
 import { Link } from 'react-router';
+import { fromJS } from 'immutable';
 import cx from 'classnames';
 import { sidemenuModel } from '../models/sidemenu';
 
 class App extends Component {
   state = {
     sideMenuToogled: false,
-    navModel: [...sidemenuModel]
+    navModel: fromJS(sidemenuModel)
   };
 
   render() {
@@ -55,14 +56,14 @@ class App extends Component {
             id="sidebar">
             {
               navModel.map(
-                ({ id, text, linkTo, fontIconName }, navItemIdx) => (
+                (navItem, navItemIdx) => (
                   <li key={navItemIdx}>
-                    <Link to={linkTo}>
+                    <Link to={navItem.get('linkTo')}>
                       <span>
-                        {text}
+                        {navItem.get('text')}
                       </span>
                       <i
-                        className={`sub_icon fa fa-home ${fontIconName || 'fa-link'}`}
+                        className={`sub_icon fa fa-home ${navItem.get('fontIconName') || 'fa-link'}`}
                         aria-hidden="true"
                       />
                       {/* <span className="sub_icon glyphicon glyphicon-link" /> */}

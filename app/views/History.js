@@ -2,12 +2,12 @@
 /* eslint react/sort-comp:0 */
 /* eslint arrow-body-style:0 */
 /* eslint react/no-unused-prop-types:0 */
-import React, { Component, PropTypes } from 'react';
-import shallowCompare from 'react-addons-shallow-compare';
+import React, { PureComponent, PropTypes } from 'react';
+import { Map, List, fromJS } from 'immutable';
 import ViewContainer from '../components/ViewContainer';
 import ViewTitle from '../components/ViewTitle';
 
-class History extends Component {
+class History extends PureComponent {
   state = {
     animated: true,
     viewEntersAnim: true
@@ -16,10 +16,6 @@ class History extends Component {
   componentWillMount() {
     const { actions: { enterHistory } } = this.props;
     enterHistory();
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState);
   }
 
   componentWillUnmount() {
