@@ -9,8 +9,8 @@ import ViewContainer from '../components/ViewContainer';
 import ViewTitle from '../components/ViewTitle';
 import ListFiles from '../components/listFiles/ListFiles';
 
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 
 class Home extends PureComponent {
   defaultPartage = '~/fileStore';// 'D:\\TODEL';
@@ -139,7 +139,6 @@ class Home extends PureComponent {
   onDrop = newFiles => {
     const { actions: { addfiles } } = this.props;
     const immutableFiles = fromJS(newFiles);
-
     addfiles(immutableFiles);
     // writeFiles(immutableFiles);
   }

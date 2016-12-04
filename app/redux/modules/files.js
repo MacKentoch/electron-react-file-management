@@ -1,4 +1,4 @@
-import { Map, List, fromJS } from 'immutable';
+import { Map, List, fromJS, Iterable } from 'immutable';
 import moment from 'moment';
 
 const fs = require('fs');
@@ -37,7 +37,7 @@ export default function (state = initialState, action) {
   const currentTime = moment().format(dateFormat);
   switch (action.type) {
     case ADD_NEW_FILES:
-      return state.merge({
+      return state.mergeDeep({
         files: state.get('files').concat(action.files),
         lastUploadTime: currentTime
       });
@@ -48,7 +48,7 @@ export default function (state = initialState, action) {
       });
     case REMOVE_FILE_BY_FILENAME:
       return state.merge({
-        files: state.get('files').filter((file) => file.get('name') !== action.fileName),
+        files: state.get('files').filter((file) => file.name !== action.fileName),
         lastUploadTime: currentTime
       });
     case SET_FILE_PATH:
@@ -62,11 +62,11 @@ export default function (state = initialState, action) {
       });
     case CONFIRM_WRITE_FILE:
       return state.merge({
-        writingFiles: state.get('writingFiles').filter(file => file.get('name') !== action.file.get('name')),
+        writingFiles: state.get('writingFiles').filter(file => file.name !== action.file.name),
       });
     case ERROR_WRITE_FILE:
       return state.merge({
-        writingFiles: state.get('writingFiles').filter(file => file.get('name') !== action.file.get('name')),
+        writingFiles: state.get('writingFiles').filter(file => file.name !== action.file.name),
       });
 
     default:
@@ -78,7 +78,8 @@ export default function (state = initialState, action) {
 // /////////////////////
 // action creators
 // /////////////////////
-export function addfiles(files = List([])) {
+
+export function addfiles(files = List()) {
   return {
     type: ADD_NEW_FILES,
     files
@@ -144,7 +145,7 @@ export function writeFile(file = null, filePath = null) {
 
     return new Promise(
       (resolve, reject) => {
-        fs.writeFile(filePath, file.toJS(),
+        fs.writeFile(filePath, file,
           err => {
             if (err) {
               dispatch(errorWriteFile(file));
@@ -166,14 +167,15 @@ export function writeFiles(files = List([])) {
 
     files.forEach(
       file => {
-        const allFilePath = path.join(filePath, file.get('name'));
-        this.writeFile(file, allFilePath)
+        const allFilePath = path.join(filePath, file.name);
+        dispatch(writeFile(file, allFilePath))
           .then(
-            () => dispatch(removeFileByFileName(file.get('name')))
+            () => dispatch(removeFileByFileName(file.name))
           )
           .catch(
             err => {
-              throw new Error(err);
+              return dispatch(errorWriteFile(err));
+              // throw new Error(err);
             }
           );
       });
