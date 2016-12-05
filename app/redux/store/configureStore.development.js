@@ -6,13 +6,11 @@ import createLogger from 'redux-logger';
 import rootReducer from '../modules/reducers';
 // actions
 import * as viewsActions from '../modules/views';
-import * as counterActions from '../modules/counter';
 import * as filesActions from '../modules/files';
 
 const actionCreators = {
   ...viewsActions,
   ...filesActions,
-  ...counterActions,
   push,
 };
 

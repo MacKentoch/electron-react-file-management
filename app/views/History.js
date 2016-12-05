@@ -6,11 +6,16 @@ import React, { PureComponent, PropTypes } from 'react';
 import { Map, List, fromJS } from 'immutable';
 import ViewContainer from '../components/ViewContainer';
 import ViewTitle from '../components/ViewTitle';
+import ListFiles from '../components/listFiles/ListFiles';
 
 class History extends PureComponent {
   state = {
     animated: true,
-    viewEntersAnim: true
+    viewEntersAnim: true,
+    demoFiles: [
+      { name: 'test1', filePath: './abc', size: 1024 },
+      { name: 'test2', filePath: './abcd', size: 102345 }
+    ]
   };
 
   componentWillMount() {
@@ -35,27 +40,12 @@ class History extends PureComponent {
               title={'History'}
               faIconName={'fa-history'}
             />
-            <div>
-              <div className="list-group">
-                <a href="#" className="list-group-item active">
-                  <div
-                    style={{ height: '40px', width: '40px', backgroundColor: '#F1F2F3', marginRight: '10px'}}
-                    className="pull-left">
-                    test
-                  </div>
-                  <h4 className="list-group-item-heading">First List Group Item Heading</h4>
-                  <p className="list-group-item-text">List Group Item Text</p>
-                </a>
-                <a href="#" className="list-group-item">
-                  <h4 className="list-group-item-heading">Second List Group Item Heading</h4>
-                  <p className="list-group-item-text">List Group Item Text</p>
-                </a>
-                <a href="#" className="list-group-item">
-                  <h4 className="list-group-item-heading">Third List Group Item Heading</h4>
-                  <p className="list-group-item-text">List Group Item Text</p>
-                </a>
-              </div>
-            </div>
+
+            <ListFiles
+              files={List(this.state.demoFiles)}
+              showDeleteButton={false}
+            />
+
           </div>
         </div>
       </ViewContainer>
@@ -65,10 +55,10 @@ class History extends PureComponent {
 
 History.propTypes = {
   currentView: PropTypes.string.isRequired,
-  actions: {
+  actions: PropTypes.shape({
     enterHistory: PropTypes.func.isRequired,
     leaveHistory: PropTypes.func.isRequired
-  }
+  })
 };
 
 export default History;

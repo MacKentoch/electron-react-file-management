@@ -9,17 +9,14 @@ import ViewContainer from '../components/ViewContainer';
 import ViewTitle from '../components/ViewTitle';
 import ListFiles from '../components/listFiles/ListFiles';
 
-// const fs = require('fs');
-// const path = require('path');
-
 class Home extends PureComponent {
-  defaultPartage = '~/fileStore';// 'D:\\TODEL';
+  defaultPartage = '~/fileStore'; // 'D:\\TODEL';
 
   state = {
-    // files: null,
     animated: true,
     viewEntersAnim: true,
-    showNotification: true
+    showNotification: true,
+    dropZoneMouseHover: false
   };
 
   componentWillMount() {
@@ -28,13 +25,18 @@ class Home extends PureComponent {
     setFilePath(this.defaultPartage);
   }
 
+  // componentDidMount() {
+  //   // this.dropzone.addEventListener('dragover', this.setDropzoneHover);
+  //   // this.dropzone.addEventListener('drop', this.resetDropzoneHover);
+  // }
+
   componentWillUnmount() {
     const { actions: { leaveHome } } = this.props;
     leaveHome();
   }
 
   render() {
-    const { animated, viewEntersAnim } = this.state;
+    const { animated, viewEntersAnim, dropZoneMouseHover } = this.state;
     const { files } = this.props;
     const currentNbFiles = files && files.size ? files.size : 0;
 
@@ -50,7 +52,7 @@ class Home extends PureComponent {
             />
             <div>
               <Dropzone
-                ref={ref => (this.dropzone = ref)}
+                ref={this.setDropzoneRef}
                 className="center-block"
                 style={{
                   width: '400px',
@@ -62,6 +64,7 @@ class Home extends PureComponent {
                   display: 'flex',
                   flexDirection: 'row',
                   alignItems: 'center',
+                  backgroundColor: `${dropZoneMouseHover ? '#EB9532' : 'transparent'}`
                 }}
                 onDrop={this.onDrop}>
                 <div
@@ -117,7 +120,7 @@ class Home extends PureComponent {
                   files
                   ?
                     <ListFiles
-                      files={files.toJS()}
+                      files={files}
                       onFileRemove={this.handlesOnFileRemove}
                     />
                   :
@@ -131,6 +134,18 @@ class Home extends PureComponent {
     );
   }
 
+  setDropzoneHover = () => {
+    this.setState({ dropZoneMouseHover: true });
+  }
+
+  resetDropzoneHover = () => {
+    this.setState({ dropZoneMouseHover: false });
+  }
+
+  setDropzoneRef = (ref) => {
+    this.dropzone = ref;
+  }
+
   handlesOnFileRemove = fileIndex => {
     const { actions: { removeFileByIndex } } = this.props;
     removeFileByIndex(fileIndex);
@@ -140,7 +155,6 @@ class Home extends PureComponent {
     const { actions: { addfiles } } = this.props;
     const immutableFiles = fromJS(newFiles);
     addfiles(immutableFiles);
-    // writeFiles(immutableFiles);
   }
 
   saveFiles = (event) => {
@@ -152,40 +166,6 @@ class Home extends PureComponent {
   onOpenClick = () => {
     this.dropzone.open();
   }
-
-  // saveToDisk = files => {
-  //   files.forEach((file) => {
-  //     const filePath = path.join(this.defaultPartage, file.name);
-  //     this.writeFile(file, filePath)
-  //       .then(
-  //         () => {
-  //           const newListOfFiles = [...this.state.files].filter(fil => fil.name !== file.name);
-  //           this.setState({ files: newListOfFiles });
-  //           return true;
-  //         }
-  //       )
-  //       .catch(
-  //         err => {
-  //           throw new Error(err);
-  //         }
-  //       );
-  //   });
-  // }
-
-  // writeFile = (file, filePath) => {
-  //   return new Promise(
-  //     (resolve, reject) => {
-  //       fs.writeFile(filePath, file,
-  //         err => {
-  //           if (err) {
-  //             return reject(err);
-  //           }
-  //           return resolve({ file: file.name });
-  //         }
-  //       );
-  //     }
-  //   );
-  // }
 }
 
 Home.propTypes = {

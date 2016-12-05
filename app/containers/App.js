@@ -19,6 +19,12 @@ class App extends Component {
     navModel: fromJS(sidemenuModel)
   };
 
+  componentDidMount() {
+    // drag and drop over app (other than drag and drop field) should be disabled:
+    this.wrapper.addEventListener('dragover', this.preventEvent);
+    this.wrapper.addEventListener('drop', this.preventEvent);
+  }
+
   render() {
     const { navModel, sideMenuToogled } = this.state;
     const { children } = this.props;
@@ -26,6 +32,7 @@ class App extends Component {
     return (
       <div
         id="wrapper"
+        ref={this.registerWrapperRef}
         style={{ overflow: 'auto' }}
         className={
           cx({
@@ -88,6 +95,15 @@ class App extends Component {
         </div>
       </div>
     );
+  }
+
+  registerWrapperRef = (ref) => {
+    this.wrapper = ref;
+  }
+
+  preventEvent = (event) => {
+    event.preventDefault();
+    return false;
   }
 
   handlesOnMenuToggleClick = event => {

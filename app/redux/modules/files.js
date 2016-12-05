@@ -1,8 +1,7 @@
-import { Map, List, fromJS, Iterable } from 'immutable';
+import { Map, List } from 'immutable';
 import moment from 'moment';
-
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 const dateFormat = 'DD/MM/YYYY HH:mm';
 
@@ -132,6 +131,7 @@ function requireWriteFile(file) {
 function confirmWriteFile(file, filePath = '') {
   return {
     type: CONFIRM_WRITE_FILE,
+    savePersist: true, // persistDB middleware will check this property
     file,
     filePath
   };
@@ -165,7 +165,7 @@ export function writeFile(file = null, filePath = null) {
             if (err) {
               return reject({
                 file,
-                details: err.message
+                details: errorMessageFromErrorCode(err)
               });
             }
             return resolve({ file, filePath });
@@ -196,4 +196,13 @@ export function writeFiles(files = List([])) {
           );
       });
   };
+}
+
+function errorMessageFromErrorCode(err) {
+  switch (err.code) {
+    case 'ENOENT':
+      return 'destination is not accessible.';
+    default:
+      return 'An error occured...';
+  }
 }

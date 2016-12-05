@@ -1,20 +1,15 @@
 /* eslint react/jsx-closing-bracket-location:0 */
 /* eslint react/sort-comp:0 */
 /* eslint arrow-body-style:0 */
-import React, { Component, PropTypes } from 'react';
-import shallowCompare from 'react-addons-shallow-compare';
+import React, { PureComponent, PropTypes } from 'react';
 import { TransitionMotion, spring, presets } from 'react-motion';
+import { List } from 'immutable';
 import File from './File';
 
 
-class ListFiles extends Component {
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState);
-  }
-
+class ListFiles extends PureComponent {
   render() {
-    const { files, onFileRemove } = this.props;
+    const { onFileRemove, showDeleteButton } = this.props;
 
     return (
       <div
@@ -34,23 +29,7 @@ class ListFiles extends Component {
             color: '#FFFFF'
           }}>
           <TransitionMotion
-            defaultStyles={this.getDefaultStyles()}
-            // styles={this.getStyles()}
-            styles={
-              files.map((file, fileIdx) => ({
-                key: String(fileIdx),
-                data: {
-                  type: file.type,
-                  name: file.name,
-                  filePath: file.filePath,
-                  size: file.size
-                },
-                style: {
-                  height: spring(60, presets.gentle),
-                  opacity: spring(1, presets.gentle)
-                }
-              }))
-            }
+            styles={this.getStyle()}
             willLeave={this.willLeave}
             willEnter={this.willEnter}>
             {
@@ -61,7 +40,6 @@ class ListFiles extends Component {
                   {
                     interpolatedStyles.map(
                       ({ key, data: { name, type, filePath, size }, style }, fileIdx) => {
-                        // { name, type, filePath, size, key, style },
                         return (
                           <File
                             key={fileIdx}
@@ -70,6 +48,7 @@ class ListFiles extends Component {
                             type={type}
                             filePath={filePath}
                             size={size}
+                            showDeleteButton={showDeleteButton}
                             onFileRemove={onFileRemove}
                             style={style}
                           />
@@ -85,43 +64,25 @@ class ListFiles extends Component {
     );
   }
 
-  // actual animation-related logic
-  getDefaultStyles() {
-    const { files } = this.props;
-    return files.map((file, fileIdx) => (
-      {
-        key: String(fileIdx),
-        data: {
-          type: file.type,
-          name: file.name,
-          filePath: file.filePath,
-          size: file.size
-        },
-        style: {
-          height: 0,
-          opacity: 1
-        }
-      }
-    ));
-  }
-
   getStyle() {
     const { files } = this.props;
-    files.map((file, fileIdx) => (
-      {
-        key: String(fileIdx),
-        data: {
-          type: file.type,
-          name: file.name,
-          filePath: file.filePath,
-          size: file.size
-        },
-        style: {
-          height: spring(60, presets.gentle),
-          opacity: spring(1, presets.gentle)
+    return files.map(
+      (file, fileIdx) => (
+        {
+          key: String(fileIdx),
+          data: {
+            type: file.type,
+            name: file.name,
+            filePath: file.filePath,
+            size: file.size
+          },
+          style: {
+            height: spring(60, presets.gentle),
+            opacity: spring(1, presets.gentle)
+          }
         }
-      }
-    ));
+      )
+    ).toJS();
   }
 
   willEnter = () => {
@@ -140,15 +101,21 @@ class ListFiles extends Component {
 }
 
 ListFiles.propTypes = {
-  files: PropTypes.arrayOf(
-    PropTypes.shape({
-      type: PropTypes.string,
-      name: PropTypes.string.isRequired,
-      filePath: PropTypes.string,
-      size: PropTypes.any.isRequired
-    })
-  ),
-  onFileRemove: PropTypes.func.isRequired
+  files: PropTypes.instanceOf(List),
+  // files: PropTypes.arrayOf(
+  //   PropTypes.shape({
+  //     type: PropTypes.string,
+  //     name: PropTypes.string.isRequired,
+  //     filePath: PropTypes.string,
+  //     size: PropTypes.any.isRequired
+  //   })
+  // ),
+  showDeleteButton: PropTypes.bool,
+  onFileRemove: PropTypes.func
+};
+
+ListFiles.defaultProps = {
+  showDeleteButton: true
 };
 
 export default ListFiles;
