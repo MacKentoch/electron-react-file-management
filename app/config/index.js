@@ -1,5 +1,8 @@
 const appConfig = {
-
+  persistStore: {
+    type: 'localStorage',
+    allTypes: ['localStorage', 'electron-json-storage', 'tedious']
+  },
   // all files mime types (at least these managed by this application):
   fileMimeTypes: [
     // txt:

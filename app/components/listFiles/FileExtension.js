@@ -3,16 +3,9 @@
 /* eslint arrow-body-style:0 */
 /* eslint react/forbid-prop-types:0 */
 
-import React, { Component, PropTypes } from 'react';
-import shallowCompare from 'react-addons-shallow-compare';
+import React, { PureComponent, PropTypes } from 'react';
 
-
-class FileExtension extends Component {
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState);
-  }
-
+class FileExtension extends PureComponent {
   render() {
     return (
       <div

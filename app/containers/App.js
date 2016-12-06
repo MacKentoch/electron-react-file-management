@@ -11,6 +11,7 @@ import React, {
 import { Link } from 'react-router';
 import { fromJS } from 'immutable';
 import cx from 'classnames';
+import { NotificationStack } from 'react-notification';
 import { sidemenuModel } from '../models/sidemenu';
 
 class App extends Component {
@@ -93,6 +94,44 @@ class App extends Component {
             /> */}
           </div>
         </div>
+        <NotificationStack
+          notifications={[
+            {
+              key: 1,
+              message: 'test message ultra super sized to tets the limit of super ulatr sized message',
+              dismissAfter: 1000,
+              action: 'Dismiss',
+              onClick: ()=>console.log('should dispatch "query" delete notification key=1')
+            },
+            {
+              key: 2,
+              message: 'test message',
+              dismissAfter: 1000,
+              action: 'Dismiss',
+              onClick: ()=>console.log('should dispatch "query" delete notification key=2')
+            }
+          ]
+          }
+          onDismiss={()=>console.log('onDismiss to do: should dispatch delete notification selected')}
+          activeBarStyleFactory={
+            (index, style) => {
+              return {
+                ...style,
+                bottom: `${90 - (5 * index)}%`,
+                left: '10%'
+              };
+            }
+          }
+          barStyleFactory={
+            (index, style) => {
+              return {
+                ...style,
+                bottom: `${90 - (5 * index)}%`,
+                left: '10%'
+              };
+            }
+          }
+        />
       </div>
     );
   }

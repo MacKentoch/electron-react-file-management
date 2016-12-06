@@ -10,13 +10,12 @@ import ViewTitle from '../components/ViewTitle';
 import ListFiles from '../components/listFiles/ListFiles';
 
 class Home extends PureComponent {
-  defaultPartage = '~/fileStore'; // 'D:\\TODEL';
+  defaultPartage = '~/fileStore';
 
   state = {
     animated: true,
     viewEntersAnim: true,
-    showNotification: true,
-    dropZoneMouseHover: false
+    showNotification: true
   };
 
   componentWillMount() {
@@ -25,18 +24,13 @@ class Home extends PureComponent {
     setFilePath(this.defaultPartage);
   }
 
-  // componentDidMount() {
-  //   // this.dropzone.addEventListener('dragover', this.setDropzoneHover);
-  //   // this.dropzone.addEventListener('drop', this.resetDropzoneHover);
-  // }
-
   componentWillUnmount() {
     const { actions: { leaveHome } } = this.props;
     leaveHome();
   }
 
   render() {
-    const { animated, viewEntersAnim, dropZoneMouseHover } = this.state;
+    const { animated, viewEntersAnim } = this.state;
     const { files } = this.props;
     const currentNbFiles = files && files.size ? files.size : 0;
 
@@ -64,7 +58,7 @@ class Home extends PureComponent {
                   display: 'flex',
                   flexDirection: 'row',
                   alignItems: 'center',
-                  backgroundColor: `${dropZoneMouseHover ? '#EB9532' : 'transparent'}`
+                  // backgroundColor: `${dropZoneMouseHover ? '#EB9532' : 'transparent'}`
                 }}
                 onDrop={this.onDrop}>
                 <div
@@ -132,14 +126,6 @@ class Home extends PureComponent {
         </div>
       </ViewContainer>
     );
-  }
-
-  setDropzoneHover = () => {
-    this.setState({ dropZoneMouseHover: true });
-  }
-
-  resetDropzoneHover = () => {
-    this.setState({ dropZoneMouseHover: false });
   }
 
   setDropzoneRef = (ref) => {

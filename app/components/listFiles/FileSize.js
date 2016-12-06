@@ -3,15 +3,10 @@
 /* eslint arrow-body-style:0 */
 /* eslint react/forbid-prop-types:0 */
 
-import React, { Component, PropTypes } from 'react';
-import shallowCompare from 'react-addons-shallow-compare';
+import React, { PureComponent, PropTypes } from 'react';
 import { formatBytes } from '../../utils/file';
 
-class FileSize extends Component {
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState);
-  }
+class FileSize extends PureComponent {
 
   render() {
     const { fileSize } = this.props;

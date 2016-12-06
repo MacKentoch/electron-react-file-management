@@ -63,10 +63,6 @@ a:hover {
   margin-right: 30px;
 }
 
-/*.row {
-    margin-left:10px;
-    margin-right:10px;
-}*/
 
 #wrapper {
     padding-left: 70px;
@@ -195,20 +191,19 @@ a:hover {
     #wrapper {
     padding-left: 70px;
     transition: all .4s ease 0s;
-}
-#sidebar-wrapper {
+  }
+  #sidebar-wrapper {
     left: 70px;
-}
-#wrapper.active {
+  }
+  #wrapper.active {
     padding-left: 150px;
-}
-#wrapper.active #sidebar-wrapper {
+  }
+  #wrapper.active #sidebar-wrapper {
     left: 150px;
     width: 150px;
     transition: all .4s ease 0s;
+  }
 }
-}
-
 
 /*animate.css*/
 

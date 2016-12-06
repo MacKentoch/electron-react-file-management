@@ -9,6 +9,7 @@ const dateFormat = 'DD/MM/YYYY HH:mm';
 // constants
 // /////////////////////
 const ADD_NEW_FILES = 'ADD_NEW_FILES';
+// const ADD_NEW_FILE_DUPLICATE = 'ADD_NEW_FILE_DUPLICATE';
 const REMOVE_FILE_BY_INDEX = 'REMOVE_FILE_BY_INDEX';
 const REMOVE_FILE_BY_FILENAME = 'REMOVE_FILE_BY_FILENAME';
 
@@ -63,7 +64,8 @@ export default function (state = initialState, action) {
       });
     case CONFIRM_WRITE_FILE:
       return state.merge({
-        writingFiles: state.get('writingFiles').filter(file => file.name !== action.file.name)
+        writingFiles: state.get('writingFiles').filter(file => file.name !== action.file.name),
+        histoFiles: state.get('histoFiles').push(Map({ file: action.file, date: moment().format('DD/MM/YYYY') }))
       });
     case ERROR_WRITE_FILE:
       return state.merge({
@@ -129,11 +131,19 @@ function requireWriteFile(file) {
 }
 
 function confirmWriteFile(file, filePath = '') {
-  return {
-    type: CONFIRM_WRITE_FILE,
-    savePersist: true, // persistDB middleware will check this property
-    file,
-    filePath
+  return (dispatch, getStore) => {
+    return {
+      type: CONFIRM_WRITE_FILE,
+      savePersist: true, // persistDB middleware will check this property
+      file,
+      filePath,
+      permanentStore: {
+        required: true,
+        storeKey: 'filesHisto',
+        storeValue: '',
+        ReadOrWrite: false // false is READ storage and true is WRITE to storage
+      }
+    };
   };
 }
 

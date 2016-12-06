@@ -9,13 +9,33 @@ import FileName from './FileName';
 import FileSize from './FileSize';
 import FileRemove from './FileRemove';
 
-
 class File extends PureComponent {
   render() {
-    const { type, name, size, fileIndex, style, showDeleteButton } = this.props;
+    const {
+      type,
+      name,
+      size,
+      fileIndex,
+      style,
+      showDeleteButton,
+      showError
+    } = this.props;
 
     return (
       <div>
+        {
+          showError &&
+          <div style={{
+            diplay: 'absolute',
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0,0,0,0.2)'
+          }}>
+            <p>
+              Error
+            </p>
+          </div>
+        }
         <a
           onClick={this.handlesOnFileClick}
           className="list-group-item"
@@ -75,11 +95,13 @@ File.propTypes = {
   fileIndex: PropTypes.number.isRequired,
   onFileRemove: PropTypes.func,
   style: PropTypes.any,
-  showDeleteButton: PropTypes.bool
+  showDeleteButton: PropTypes.bool,
+  showError: PropTypes.bool
 };
 
 File.defaultProps = {
-  type: 'unknown'
+  type: 'unknown',
+  showError: false
 };
 
 export default File;

@@ -2,33 +2,42 @@
 /* eslint react/sort-comp:0 */
 /* eslint arrow-body-style:0 */
 /* eslint react/forbid-prop-types:0 */
+/* eslint jsx-a11y/no-static-element-interactions:0 */
 
-import React, { Component, PropTypes } from 'react';
-import shallowCompare from 'react-addons-shallow-compare';
+import React, { PureComponent, PropTypes } from 'react';
+import { Motion, spring, presets } from 'react-motion';
 
-
-class FileRemove extends Component {
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState);
-  }
+class FileRemove extends PureComponent {
+  state = {
+    isMouseOver: false
+  };
 
   render() {
+    const { isMouseOver } = this.state;
     return (
-      <div>
-        <a
-          onClick={this.handlesOnClick}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            fontSize: '16px',
-            color: '#F1F1F1',
-            padding: '5px'
-          }}>
-          <i className="fa fa-trash-o" />
-        </a>
+      <div
+        onMouseEnter={this.handlesOnMouseEnter}
+        onMouseLeave={this.handlesOnMouseLeave}>
+        <Motion style={{ scaleXY: spring(isMouseOver ? 2 : 1, presets.wobbly) }}>
+          {
+            ({ scaleXY }) => (
+              <span
+                onClick={this.handlesOnClick}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                  fontSize: '16px',
+                  color: '#F1F1F1',
+                  padding: '5px',
+                  transform: `scale(${scaleXY})`
+                }}>
+                <i className="fa fa-trash-o" />
+              </span>
+            )
+          }
+        </Motion>
       </div>
     );
   }
@@ -37,6 +46,14 @@ class FileRemove extends Component {
     event.preventDefault();
     const { onClick, fileIndex } = this.props;
     onClick(fileIndex);
+  }
+
+  handlesOnMouseEnter = () => {
+    this.setState({ isMouseOver: true });
+  }
+
+  handlesOnMouseLeave = () => {
+    this.setState({ isMouseOver: false });
   }
 }
 
