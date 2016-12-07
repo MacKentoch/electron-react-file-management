@@ -19,8 +19,15 @@ class History extends PureComponent {
   };
 
   componentWillMount() {
-    const { actions: { enterHistory } } = this.props;
+    const {
+      actions: {
+        enterHistory,
+        getPersistHistoFiles
+      }
+    } = this.props;
+
     enterHistory();
+    getPersistHistoFiles();
   }
 
   componentWillUnmount() {
@@ -30,6 +37,8 @@ class History extends PureComponent {
 
   render() {
     const { animated, viewEntersAnim } = this.state;
+    const { histoFiles } = this.props;
+
     return (
       <ViewContainer
         animated={animated}
@@ -54,10 +63,17 @@ class History extends PureComponent {
 }
 
 History.propTypes = {
+  // views:
   currentView: PropTypes.string.isRequired,
+  // files:
+  histoFiles: PropTypes.instanceOf(List),
+
   actions: PropTypes.shape({
+    // views:
     enterHistory: PropTypes.func.isRequired,
-    leaveHistory: PropTypes.func.isRequired
+    leaveHistory: PropTypes.func.isRequired,
+    // files:
+    getPersistHistoFiles: PropTypes.func.isRequired
   })
 };
 

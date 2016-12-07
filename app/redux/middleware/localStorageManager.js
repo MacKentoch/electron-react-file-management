@@ -13,9 +13,9 @@ const jsonParse = JSON.parse;
     dispatch an action with "permanentStore" object :
 
     permanentStore: {
-      required: [boolean]     -> REQUIRED,
+      required: [boolean]     -> REQUIRED
       storeKey: [string]      -> REQUIRED
-      storeValue: [string]    -> REQUIRED | if write should be suppplied by a value to write || if read will be suppplied by middleware with value
+      storeValue: [any]       -> REQUIRED | if write should be suppplied by a value to write || if read will be suppplied by middleware with value
       ReadOrWrite: [boolean]  -> REQUIRED | false is READ storage and true is WRITE to storage
     }
  ------------------------------------------------------------------------------------------------------------- */

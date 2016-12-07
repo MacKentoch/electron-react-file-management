@@ -1,4 +1,4 @@
-import { Map, List } from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 import moment from 'moment';
 import fs from 'fs';
 import path from 'path';
@@ -8,6 +8,7 @@ const dateFormat = 'DD/MM/YYYY HH:mm';
 // /////////////////////
 // constants
 // /////////////////////
+const GET_PERSIST_HISTO_FILES = 'GET_PERSIST_HISTO_FILES';
 const ADD_NEW_FILES = 'ADD_NEW_FILES';
 // const ADD_NEW_FILE_DUPLICATE = 'ADD_NEW_FILE_DUPLICATE';
 const REMOVE_FILE_BY_INDEX = 'REMOVE_FILE_BY_INDEX';
@@ -65,7 +66,7 @@ export default function (state = initialState, action) {
     case CONFIRM_WRITE_FILE:
       return state.merge({
         writingFiles: state.get('writingFiles').filter(file => file.name !== action.file.name),
-        histoFiles: state.get('histoFiles').push(Map({ file: action.file, date: moment().format('DD/MM/YYYY') }))
+        histoFiles: state.get('histoFiles').push(Map({ name: action.file.name, size: action.file.size, date: moment().format('DD/MM/YYYY') }))
       });
     case ERROR_WRITE_FILE:
       return state.merge({
@@ -77,6 +78,14 @@ export default function (state = initialState, action) {
         writeFileError: state.get('writeFileError').clear()
       });
 
+    case GET_PERSIST_HISTO_FILES:
+      console.log('action: ', action);
+
+      return state.map({
+        histoFiles: state.get('histoFiles').concat(
+        fromJS(action.permanentStore.storeValue))
+      });
+
     default:
       return state;
   }
@@ -86,6 +95,17 @@ export default function (state = initialState, action) {
 // /////////////////////
 // action creators
 // /////////////////////
+export function getPersistHistoFiles() {
+  return {
+    type: GET_PERSIST_HISTO_FILES,
+    permanentStore: {
+      required: true,
+      storeKey: 'filesHisto',
+      storeValue: '', //
+      ReadOrWrite: false // false is READ storage
+    }
+  };
+}
 
 export function addfiles(files = List()) {
   return {
@@ -131,19 +151,37 @@ function requireWriteFile(file) {
 }
 
 function confirmWriteFile(file, filePath = '') {
-  return (dispatch, getStore) => {
-    return {
+  return (dispatch, getState) => {
+    const prevFileHist = getState()
+                            .files
+                            .get('histoFiles')
+                            .push(
+                              Map({
+                                name: file.name,
+                                size: file.size,
+                                date: moment().format('DD/MM/YYYY')
+                              })
+                            );
+
+    dispatch({
       type: CONFIRM_WRITE_FILE,
       savePersist: true, // persistDB middleware will check this property
       file,
       filePath,
+      // add to persist store (middleware):
       permanentStore: {
         required: true,
         storeKey: 'filesHisto',
-        storeValue: '',
-        ReadOrWrite: false // false is READ storage and true is WRITE to storage
+        storeValue: prevFileHist,
+        ReadOrWrite: true // false is READ storage and true is WRITE to storage
+      },
+      // notification (middleware):
+      showNotification: {
+        message: `${file.name} copied`,
+        dismissAfter: 1000,
+        action: 'Dismiss'
       }
-    };
+    });
   };
 }
 
@@ -165,9 +203,6 @@ export function writeFile(file = null, filePath = null) {
       const error = { error: 'writeFile needs a path to write the file' };
       return Promise.reject(error);
     }
-
-    dispatch(requireWriteFile(file));
-
     return new Promise(
       (resolve, reject) => {
         fs.writeFile(filePath, file,
@@ -193,6 +228,8 @@ export function writeFiles(files = List([])) {
     files.forEach(
       file => {
         const allFilePath = path.join(filePath, file.name);
+        dispatch(requireWriteFile(file));
+
         dispatch(writeFile(file, allFilePath))
           .then(
             successPayload => {

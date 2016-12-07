@@ -161,17 +161,24 @@ Home.propTypes = {
   filePath: PropTypes.string,
   lastUploadTime: PropTypes.string,
   files: PropTypes.instanceOf(List),
+  histoFiles: PropTypes.instanceOf(List),
+  // notifications:
+  notifications: PropTypes.instanceOf(List),
 
   actions: PropTypes.shape({
     // views:
     enterHome: PropTypes.func.isRequired,
     leaveHome: PropTypes.func.isRequired,
     // files:
+    getPersistHistoFiles: PropTypes.func.isRequired,
     setFilePath: PropTypes.func.isRequired,
     addfiles: PropTypes.func.isRequired,
     removeFileByIndex: PropTypes.func.isRequired,
     removeFileByFileName: PropTypes.func.isRequired,
-    writeFiles: PropTypes.func.isRequired
+    writeFiles: PropTypes.func.isRequired,
+    // notifications:
+    addNotification: PropTypes.func.isRequired,
+    removeNotification: PropTypes.func.isRequired
   }).isRequired
 };
 

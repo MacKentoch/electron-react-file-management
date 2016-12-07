@@ -3,15 +3,20 @@ import thunk from 'redux-thunk';
 import { hashHistory } from 'react-router';
 import { routerMiddleware, push } from 'react-router-redux';
 import createLogger from 'redux-logger';
-import { localStorageManager } from '../middleware';
+import {
+  localStorageManager,
+  notificationManager
+} from '../middleware';
 import rootReducer from '../modules/reducers';
 // actions
 import * as viewsActions from '../modules/views';
 import * as filesActions from '../modules/files';
+import * as notificationsActions from '../modules/notifications';
 
 const actionCreators = {
   ...viewsActions,
   ...filesActions,
+  ...notificationsActions,
   push,
 };
 
@@ -32,7 +37,13 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
   compose;
 /* eslint-enable no-underscore-dangle */
 const enhancer = composeEnhancers(
-  applyMiddleware(thunk, localStorageManager, router, logger)
+  applyMiddleware(
+    thunk,
+    localStorageManager,
+    notificationManager,
+    router,
+    logger
+  )
 );
 
 export default function configureStore(initialState: Object) {

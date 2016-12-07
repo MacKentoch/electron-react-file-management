@@ -3,11 +3,15 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as viewActions from '../redux/modules/views';
+import * as filesActions from '../redux/modules/files';
 import { History } from '../views';
 
 const mapStateToProps = state => {
   return {
-    currentView: state.views.get('currentView')
+    // views:
+    currentView: state.views.get('currentView'),
+    // files:
+    histoFiles: state.files.get('histoFiles')
   };
 };
 
@@ -16,8 +20,11 @@ const mapDispatchToProps = (dispatch) => {
   return {
     actions: bindActionCreators(
       {
+        // views:
         enterHistory: viewActions.enterHistory,
-        leaveHistory: viewActions.leaveHistory
+        leaveHistory: viewActions.leaveHistory,
+        // files:
+        getPersistHistoFiles: filesActions.getPersistHistoFiles
       },
       dispatch)
   };
