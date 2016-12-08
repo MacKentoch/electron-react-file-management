@@ -38,6 +38,7 @@ class History extends PureComponent {
   render() {
     const { animated, viewEntersAnim } = this.state;
     const { histoFiles } = this.props;
+    console.log(histoFiles.toJS());
 
     return (
       <ViewContainer
