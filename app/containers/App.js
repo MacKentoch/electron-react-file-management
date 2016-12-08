@@ -119,7 +119,8 @@ class App extends Component {
               return {
                 ...style,
                 bottom: `${90 - (5 * index)}%`,
-                left: '10%'
+                left: '20%',
+                backgroundColor: '#4A4A4A'
               };
             }
           }
@@ -128,7 +129,8 @@ class App extends Component {
               return {
                 ...style,
                 bottom: `${90 - (5 * index)}%`,
-                left: '10%'
+                left: '20%',
+                backgroundColor: '#4A4A4A'
               };
             }
           }

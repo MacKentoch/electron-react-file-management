@@ -179,7 +179,7 @@ function confirmWriteFile(file, filePath = '') {
       showNotification: {
         message: `${file.name} copied`,
         dismissAfter: 1000,
-        action: 'Dismiss'
+        action: 'DONE'
       }
     });
   };
@@ -189,7 +189,13 @@ function errorWriteFile(file, details = '') {
   return {
     type: ERROR_WRITE_FILE,
     file,
-    details
+    details,
+    // notification (middleware):
+    showNotification: {
+      message: `ERROR: ${file.name} not copied...`,
+      dismissAfter: 1000,
+      action: 'RETRY LATER'
+    }
   };
 }
 

@@ -27,7 +27,7 @@ class History extends PureComponent {
     } = this.props;
 
     enterHistory();
-    getPersistHistoFiles();
+    // getPersistHistoFiles();
   }
 
   componentWillUnmount() {
@@ -38,7 +38,6 @@ class History extends PureComponent {
   render() {
     const { animated, viewEntersAnim } = this.state;
     const { histoFiles } = this.props;
-    console.log(histoFiles.toJS());
 
     return (
       <ViewContainer
@@ -52,7 +51,7 @@ class History extends PureComponent {
             />
 
             <ListFiles
-              files={List(this.state.demoFiles)}
+              files={histoFiles}
               showDeleteButton={false}
             />
 
