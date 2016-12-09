@@ -10,8 +10,8 @@ import ViewTitle from '../components/ViewTitle';
 import ListFiles from '../components/listFiles/ListFiles';
 
 class Home extends PureComponent {
-  // defaultPartage = '~/fileStore';
-  defaultPartage = '/Users/kentor/fileStore';
+  defaultPartage = '~/fileStore';
+
   state = {
     animated: true,
     viewEntersAnim: true,

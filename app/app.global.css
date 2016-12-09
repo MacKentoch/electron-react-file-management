@@ -48,7 +48,7 @@ a:hover {
 }
 
 .view-enter {
-   animation: fadeIn 0.5s both ease-in;
+   // animation: fadeIn 0.5s both ease-in;
    z-index: 9999;
  }
 

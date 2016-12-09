@@ -3,31 +3,27 @@
 /* eslint arrow-body-style:0 */
 /* eslint react/no-unused-prop-types:0 */
 import React, { PureComponent, PropTypes } from 'react';
-import { Map, List, fromJS } from 'immutable';
+import { List } from 'immutable';
+import moment from 'moment';
 import ViewContainer from '../components/ViewContainer';
 import ViewTitle from '../components/ViewTitle';
 import ListFiles from '../components/listFiles/ListFiles';
 
+
 class History extends PureComponent {
   state = {
     animated: true,
-    viewEntersAnim: true,
-    demoFiles: [
-      { name: 'test1', filePath: './abc', size: 1024 },
-      { name: 'test2', filePath: './abcd', size: 102345 }
-    ]
+    viewEntersAnim: true
   };
 
   componentWillMount() {
     const {
       actions: {
-        enterHistory,
-        getPersistHistoFiles
+        enterHistory
       }
     } = this.props;
 
     enterHistory();
-    // getPersistHistoFiles();
   }
 
   componentWillUnmount() {
@@ -37,7 +33,11 @@ class History extends PureComponent {
 
   render() {
     const { animated, viewEntersAnim } = this.state;
-    const { histoFiles } = this.props;
+
+    const filter = 'all';
+
+    const filteredHistoFiles = this.filterHistoFiles(filter).sort(this.sortFilesByDateAsc);
+    const distinctFileDates = filteredHistoFiles.groupBy(file => file.date).keySeq();
 
     return (
       <ViewContainer
@@ -49,16 +49,68 @@ class History extends PureComponent {
               title={'History'}
               faIconName={'fa-history'}
             />
-
-            <ListFiles
-              files={histoFiles}
-              showDeleteButton={false}
-            />
-
+            {
+              distinctFileDates.map(
+                (dateRef, dateRefIdx) => (
+                  <div
+                    key={dateRefIdx}>
+                    <h3 style={{ textAlign: 'center' }}>
+                      {dateRef}
+                    </h3>
+                    {
+                      <ListFiles
+                        files={filteredHistoFiles.filter(file => file.date === dateRef)}
+                        showDeleteButton={false}
+                      />
+                    }
+                  </div>
+                )
+              )
+            }
           </div>
         </div>
       </ViewContainer>
     );
+  }
+
+  sortFilesByDateAsc = (fileA, fileB) => {
+    if (moment(fileA.date, 'DD/MM/YYYY').diff(moment(fileB.date, 'DD/MM/YYYY')) < 0) {
+      return -1;
+    }
+    if (moment(fileA.date, 'DD/MM/YYYY').diff(moment(fileB.date, 'DD/MM/YYYY')) > 0) {
+      return 1;
+    }
+    return 0;
+  }
+
+  filterHistoFiles(filter = 'today') {
+    const { histoFiles } = this.props;
+    switch (filter) {
+
+      case 'today':
+        return histoFiles.filter(file => {
+          const diffInDays = moment().diff(moment(file.date, 'DD/MM/YYYY'), 'days');
+          return diffInDays === 0;
+        });
+
+      case 'thisWeek':
+        return histoFiles.filter(file => {
+          const diffInWeeks = moment().diff(moment(file.date, 'DD/MM/YYYY'), 'week');
+          return diffInWeeks === 0;
+        });
+
+      case 'thisMonth':
+        return histoFiles.filter(file => {
+          const diffInMonths = moment().diff(moment(file.date, 'DD/MM/YYYY'), 'month');
+          return diffInMonths === 0;
+        });
+
+      case 'all':
+        return histoFiles;
+
+      default:
+        return histoFiles;
+    }
   }
 }
 

@@ -1,4 +1,6 @@
 const appConfig = {
+  dateFormat: 'DD/MM/YYYY',
+
   persistStore: {
     type: 'localStorage',
     allTypes: ['localStorage', 'electron-json-storage', 'tedious']

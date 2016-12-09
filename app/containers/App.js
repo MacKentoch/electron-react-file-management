@@ -17,6 +17,7 @@ import cx from 'classnames';
 import { NotificationStack } from 'react-notification';
 import { sidemenuModel } from '../models/sidemenu';
 import * as notificationsActions from '../redux/modules/notifications';
+import * as filesActions from '../redux/modules/files';
 
 class App extends Component {
   state = {
@@ -24,7 +25,15 @@ class App extends Component {
     navModel: fromJS(sidemenuModel)
   };
 
+
   componentDidMount() {
+    const {
+      actions: {
+        getPersistHistoFiles
+      }
+    } = this.props;
+
+    getPersistHistoFiles();
     // drag and drop over app (other than drag and drop field) should be disabled:
     this.wrapper.addEventListener('dragover', this.preventEvent);
     this.wrapper.addEventListener('drop', this.preventEvent);
@@ -174,6 +183,9 @@ App.propTypes = {
 
   notifications: PropTypes.instanceOf(List),
 
+  // files:
+  histoFiles: PropTypes.instanceOf(List),
+
   actions: PropTypes.shape({
     // notifications:
     addNotification: PropTypes.func.isRequired,
@@ -185,7 +197,9 @@ App.propTypes = {
 const mapStateToProps = state => {
   return {
     // notifications:
-    notifications: state.notifications
+    notifications: state.notifications,
+    // files:
+    histoFiles: state.files.histoFiles
   };
 };
 
@@ -196,7 +210,9 @@ const mapDispatchToProps = (dispatch) => {
       {
         // notifications:
         addNotification: notificationsActions.addNotification,
-        removeNotification: notificationsActions.removeNotification
+        removeNotification: notificationsActions.removeNotification,
+        // files:
+        getPersistHistoFiles: filesActions.getPersistHistoFiles
       },
       dispatch)
   };

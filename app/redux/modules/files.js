@@ -1,4 +1,4 @@
-import { Map, List, fromJS } from 'immutable';
+import { Map, List } from 'immutable';
 import moment from 'moment';
 import fs from 'fs';
 import path from 'path';
@@ -66,7 +66,7 @@ export default function (state = initialState, action) {
     case CONFIRM_WRITE_FILE:
       return state.merge({
         writingFiles: state.get('writingFiles').filter(file => file.name !== action.file.name),
-        histoFiles: state.get('histoFiles').push(Map({ name: action.file.name, size: action.file.size, date: moment().format('DD/MM/YYYY') }))
+        histoFiles: state.get('histoFiles').push({ name: action.file.name, size: action.file.size, type: action.file.type, date: moment().format('DD/MM/YYYY') })
       });
     case ERROR_WRITE_FILE:
       return state.merge({
@@ -79,18 +79,17 @@ export default function (state = initialState, action) {
       });
 
     case GET_PERSIST_HISTO_FILES:
-      console.log('action: ', action);
-
-      return state.map({
-        histoFiles: state.get('histoFiles').concat(
-        fromJS(action.permanentStore.storeValue))
-      });
+      if (action.permanentStore.storeValue) {
+        return state.merge({
+          histoFiles: state.get('histoFiles').concat(List(action.permanentStore.storeValue))
+        });
+      }
+      return state;
 
     default:
       return state;
   }
 }
-
 
 // /////////////////////
 // action creators
@@ -155,13 +154,12 @@ function confirmWriteFile(file, filePath = '') {
     const prevFileHist = getState()
                             .files
                             .get('histoFiles')
-                            .push(
-                              Map({
-                                name: file.name,
-                                size: file.size,
-                                date: moment().format('DD/MM/YYYY')
-                              })
-                            );
+                            .push({
+                              name: file.name,
+                              size: file.size,
+                              type: file.type,
+                              date: moment().format('DD/MM/YYYY')
+                            });
 
     dispatch({
       type: CONFIRM_WRITE_FILE,
@@ -172,7 +170,7 @@ function confirmWriteFile(file, filePath = '') {
       permanentStore: {
         required: true,
         storeKey: 'filesHisto',
-        storeValue: prevFileHist,
+        storeValue: prevFileHist.toJS(),
         ReadOrWrite: true // false is READ storage and true is WRITE to storage
       },
       // notification (middleware):
@@ -203,11 +201,11 @@ export function writeFile(file = null, filePath = null) {
   return dispatch => {
     if (!file) {
       const error = { error: 'writeFile needs a file to write' };
-      return Promise.reject(error);
+      return Promise.reject({ file, details: error });
     }
     if (!filePath) {
       const error = { error: 'writeFile needs a path to write the file' };
-      return Promise.reject(error);
+      return Promise.reject({ file, details: error });
     }
     return new Promise(
       (resolve, reject) => {
