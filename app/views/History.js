@@ -8,6 +8,7 @@ import moment from 'moment';
 import ViewContainer from '../components/ViewContainer';
 import ViewTitle from '../components/ViewTitle';
 import ListFiles from '../components/listFiles/ListFiles';
+import HistoFilesFilterCmd from '../components/HistoFilesFilterCmd';
 
 
 class History extends PureComponent {
@@ -33,10 +34,9 @@ class History extends PureComponent {
 
   render() {
     const { animated, viewEntersAnim } = this.state;
+    const { histoFilter } = this.props;
 
-    const filter = 'all';
-
-    const filteredHistoFiles = this.filterHistoFiles(filter).sort(this.sortFilesByDateAsc);
+    const filteredHistoFiles = this.filterHistoFiles(histoFilter).sort(this.sortFilesByDateAsc);
     const distinctFileDates = filteredHistoFiles.groupBy(file => file.date).keySeq();
 
     return (
@@ -48,6 +48,10 @@ class History extends PureComponent {
             <ViewTitle
               title={'History'}
               faIconName={'fa-history'}
+            />
+            <HistoFilesFilterCmd
+              selectedFilter={histoFilter}
+              onFilterSelect={() => console.log('todo')}
             />
             {
               distinctFileDates.map(
@@ -119,13 +123,15 @@ History.propTypes = {
   currentView: PropTypes.string.isRequired,
   // files:
   histoFiles: PropTypes.instanceOf(List),
+  histoFilter: PropTypes.oneOf(['today', 'thisWeek', 'thisMonth', 'all']),
 
   actions: PropTypes.shape({
     // views:
     enterHistory: PropTypes.func.isRequired,
     leaveHistory: PropTypes.func.isRequired,
     // files:
-    getPersistHistoFiles: PropTypes.func.isRequired
+    getPersistHistoFiles: PropTypes.func.isRequired,
+    changeHistoFilter: PropTypes.func.isRequired
   })
 };
 

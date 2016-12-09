@@ -21,6 +21,9 @@ const ERROR_WRITE_FILE = 'ERROR_WRITE_FILE';
 const SET_FILE_PATH = 'SET_FILE_PATH';
 const CLEAR_FILE_ERRORS = 'CLEAR_FILE_ERRORS';
 
+const CHANGE_HISTO_FILTER = 'CHANGE_HISTO_FILTER';
+
+const ALL_HISTO_FILTER_VALUES = ['today', 'thisWeek', 'thisMonth', 'all'];
 // /////////////////////
 // reducer
 // /////////////////////
@@ -33,7 +36,8 @@ const initialState = Map({
   writingFiles: List(),
   writeFileError: List(),
   // histo:
-  histoFiles: List()
+  histoFiles: List(),
+  histoFilter: 'thisWeek' // ALL_HISTO_FILTER_VALUES[1]
 });
 
 export default function (state = initialState, action) {
@@ -85,6 +89,11 @@ export default function (state = initialState, action) {
         });
       }
       return state;
+
+    case CHANGE_HISTO_FILTER:
+      return state.merge({
+        histoFilter: action.histoFilter
+      });
 
     default:
       return state;
@@ -198,31 +207,29 @@ function errorWriteFile(file, details = '') {
 }
 
 export function writeFile(file = null, filePath = null) {
-  return dispatch => {
-    if (!file) {
-      const error = { error: 'writeFile needs a file to write' };
-      return Promise.reject({ file, details: error });
-    }
-    if (!filePath) {
-      const error = { error: 'writeFile needs a path to write the file' };
-      return Promise.reject({ file, details: error });
-    }
-    return new Promise(
-      (resolve, reject) => {
-        fs.writeFile(filePath, file,
-          err => {
-            if (err) {
-              return reject({
-                file,
-                details: errorMessageFromErrorCode(err)
-              });
-            }
-            return resolve({ file, filePath });
+  if (!file) {
+    const error = { error: 'writeFile needs a file to write' };
+    return Promise.reject({ file, details: error });
+  }
+  if (!filePath) {
+    const error = { error: 'writeFile needs a path to write the file' };
+    return Promise.reject({ file, details: error });
+  }
+  return new Promise(
+    (resolve, reject) => {
+      fs.writeFile(filePath, file,
+        err => {
+          if (err) {
+            return reject({
+              file,
+              details: errorMessageFromErrorCode(err)
+            });
           }
-        );
-      }
-    );
-  };
+          return resolve({ file, filePath });
+        }
+      );
+    }
+  );
 }
 
 export function writeFiles(files = List([])) {
@@ -255,5 +262,14 @@ function errorMessageFromErrorCode(err) {
       return 'destination is not accessible.';
     default:
       return 'An error occured...';
+  }
+}
+
+export function changeHistoFilter(histoFilter = 'today') {
+  if (ALL_HISTO_FILTER_VALUES.some(filterRef => filterRef === histoFilter)) {
+    return {
+      type: CHANGE_HISTO_FILTER,
+      histoFilter
+    };
   }
 }

@@ -11,7 +11,8 @@ const mapStateToProps = state => {
     // views:
     currentView: state.views.get('currentView'),
     // files:
-    histoFiles: state.files.get('histoFiles')
+    histoFiles: state.files.get('histoFiles'),
+    histoFilter: state.files.get('histoFilter')
   };
 };
 
@@ -24,7 +25,8 @@ const mapDispatchToProps = (dispatch) => {
         enterHistory: viewActions.enterHistory,
         leaveHistory: viewActions.leaveHistory,
         // files:
-        getPersistHistoFiles: filesActions.getPersistHistoFiles
+        getPersistHistoFiles: filesActions.getPersistHistoFiles,
+        changeHistoFilter: filesActions.changeHistoFilter
       },
       dispatch)
   };
