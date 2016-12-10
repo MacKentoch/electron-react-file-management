@@ -14,8 +14,7 @@ class Home extends PureComponent {
 
   state = {
     animated: true,
-    viewEntersAnim: true,
-    showNotification: true
+    viewEntersAnim: true
   };
 
   componentWillMount() {
@@ -57,8 +56,7 @@ class Home extends PureComponent {
                   borderRadius: 5,
                   display: 'flex',
                   flexDirection: 'row',
-                  alignItems: 'center',
-                  // backgroundColor: `${dropZoneMouseHover ? '#EB9532' : 'transparent'}`
+                  alignItems: 'center'
                 }}
                 onDrop={this.onDrop}>
                 <div

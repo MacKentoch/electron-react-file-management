@@ -10,7 +10,8 @@ const ENTER_HOME_VIEW = 'ENTER_HOME_VIEW';
 const LEAVE_HOME_VIEW = 'LEAVE_HOME_VIEW';
 const ENTER_HISTORY_VIEW = 'ENTER_HISTORY_VIEW';
 const LEAVE_HISTORY_VIEW = 'LEAVE_HISTORY_VIEW';
-
+const ENTER_INFO_VIEW = 'ENTER_INFO_VIEW';
+const LEAVE_INFO_VIEW = 'LEAVE_INFO_VIEW';
 
 // /////////////////////
 // reducer
@@ -27,6 +28,7 @@ export default function (state = initialState, action) {
 
     case ENTER_HOME_VIEW:
     case ENTER_HISTORY_VIEW:
+    case ENTER_INFO_VIEW:
       // can't enter if you are already inside
       if (state.get('currentView') !== action.currentView) {
         // return state.withMutations(
@@ -45,6 +47,7 @@ export default function (state = initialState, action) {
 
     case LEAVE_HOME_VIEW:
     case LEAVE_HISTORY_VIEW:
+    case LEAVE_INFO_VIEW:
       // can't leave if you aren't already inside
       if (state.get('currentView') === action.currentView) {
         return state.merge({
@@ -88,5 +91,19 @@ export function leaveHistory() {
   return {
     type: LEAVE_HISTORY_VIEW,
     currentView: 'history'
+  };
+}
+
+export function enterInfo() {
+  return {
+    type: ENTER_INFO_VIEW,
+    currentView: 'info'
+  };
+}
+
+export function leaveInfo() {
+  return {
+    type: LEAVE_INFO_VIEW,
+    currentView: 'info'
   };
 }
