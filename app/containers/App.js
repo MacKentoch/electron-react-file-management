@@ -14,36 +14,35 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fromJS, List } from 'immutable';
 import cx from 'classnames';
-import username from 'username';
 import { NotificationStack } from 'react-notification';
 import { sidemenuModel } from '../models/sidemenu';
 import * as notificationsActions from '../redux/modules/notifications';
 import * as filesActions from '../redux/modules/files';
+import * as userActions from '../redux/modules/user';
 
 class App extends Component {
   state = {
     sideMenuToogled: false,
-    navModel: fromJS(sidemenuModel),
-    currentUser: ''
+    navModel: fromJS(sidemenuModel)
   };
 
 
   componentDidMount() {
     const {
       actions: {
-        getPersistHistoFiles
+        getPersistHistoFiles,
+        getUserName
       }
     } = this.props;
     getPersistHistoFiles();
+    getUserName();
     // drag and drop over app (other than drag and drop field) should be disabled:
     this.wrapper.addEventListener('dragover', this.preventEvent);
     this.wrapper.addEventListener('drop', this.preventEvent);
-    // get user name into state:
-    this.getCurrentUserName();
   }
 
   render() {
-    const { navModel, sideMenuToogled, currentUser } = this.state;
+    const { navModel, sideMenuToogled } = this.state;
     const { children, notifications } = this.props;
 
     return (
@@ -163,12 +162,6 @@ class App extends Component {
     // something to do here?
   }
   /* eslint-enable no-unused-vars*/
-
-  getCurrentUserName() {
-    username()
-      .then(user => this.setState({ currentUser: user }))
-      .catch(err => err);
-  }
 }
 
 // statics :
@@ -193,7 +186,9 @@ const mapStateToProps = state => {
     // notifications:
     notifications: state.notifications,
     // files:
-    histoFiles: state.files.histoFiles
+    histoFiles: state.files.get('histoFiles'),
+    // user:
+    username: state.user.get('name')
   };
 };
 
@@ -206,7 +201,9 @@ const mapDispatchToProps = (dispatch) => {
         addNotification: notificationsActions.addNotification,
         removeNotification: notificationsActions.removeNotification,
         // files:
-        getPersistHistoFiles: filesActions.getPersistHistoFiles
+        getPersistHistoFiles: filesActions.getPersistHistoFiles,
+        // user:
+        getUserName: userActions.getUserName
       },
       dispatch)
   };

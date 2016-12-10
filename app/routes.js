@@ -12,7 +12,7 @@ export default (
     <IndexRoute component={HomePage} />
     <Route path="/history" component={HistoryPage} />
     <Route path="/info" component={InfoPage} />
-    {/* to prevent page not found in an electron app: */}
+    {/* to prevent page not found (does not make sense in an electron app): */}
     <Route path="*" component={HomePage} />
   </Route>
 );

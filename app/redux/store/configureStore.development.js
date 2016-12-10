@@ -12,11 +12,13 @@ import rootReducer from '../modules/reducers';
 import * as viewsActions from '../modules/views';
 import * as filesActions from '../modules/files';
 import * as notificationsActions from '../modules/notifications';
+import * as userActions from '../modules/user';
 
 const actionCreators = {
   ...viewsActions,
   ...filesActions,
   ...notificationsActions,
+  ...userActions,
   push,
 };
 

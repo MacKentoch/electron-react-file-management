@@ -11,7 +11,9 @@ const mapStateToProps = state => {
     // views:
     currentView: state.views.get('currentView'),
     // notifications:
-    notifications: state.notifications
+    notifications: state.notifications,
+    // user:
+    username: state.user.get('name')
   };
 };
 

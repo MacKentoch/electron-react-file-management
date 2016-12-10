@@ -25,6 +25,7 @@ class Info extends PureComponent {
 
   render() {
     const { animated, viewEntersAnim } = this.state;
+    const { username } = this.props;
 
     return (
       <ViewContainer
@@ -37,9 +38,12 @@ class Info extends PureComponent {
               faIconName={'fa-info-circle'}
             />
             <div>
-              <p>
-                TODO
-              </p>
+              <h4>
+                Your are connected as:
+                <b style={{ marginLeft: '10px' }}>
+                  {username}
+                </b>
+              </h4>
             </div>
           </div>
         </div>
@@ -53,11 +57,13 @@ Info.propTypes = {
   currentView: PropTypes.string.isRequired,
   // notifications:
   notifications: PropTypes.instanceOf(List),
+  // user:
+  username: PropTypes.string.isRequired,
 
   actions: PropTypes.shape({
     // views:
-    enterHome: PropTypes.func.isRequired,
-    leaveHome: PropTypes.func.isRequired,
+    enterInfo: PropTypes.func.isRequired,
+    leaveInfo: PropTypes.func.isRequired,
     // notifications:
     addNotification: PropTypes.func.isRequired,
     removeNotification: PropTypes.func.isRequired
