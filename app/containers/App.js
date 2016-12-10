@@ -83,11 +83,12 @@ class App extends Component {
                 (navItem, navItemIdx) => (
                   <li key={navItemIdx}>
                     <Link to={navItem.get('linkTo')}>
-                      <span>
+                      <span style={{ width: '75px' }}>
                         {navItem.get('text')}
                       </span>
                       <i
                         className={`sub_icon fa fa-home ${navItem.get('fontIconName') || 'fa-link'}`}
+                        style={{ paddingTop: '12px' }}
                         aria-hidden="true"
                       />
                       {/* <span className="sub_icon glyphicon glyphicon-link" /> */}
