@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fromJS, List } from 'immutable';
 import cx from 'classnames';
+import username from 'username';
 import { NotificationStack } from 'react-notification';
 import { sidemenuModel } from '../models/sidemenu';
 import * as notificationsActions from '../redux/modules/notifications';
@@ -22,7 +23,8 @@ import * as filesActions from '../redux/modules/files';
 class App extends Component {
   state = {
     sideMenuToogled: false,
-    navModel: fromJS(sidemenuModel)
+    navModel: fromJS(sidemenuModel),
+    currentUser: ''
   };
 
 
@@ -32,15 +34,16 @@ class App extends Component {
         getPersistHistoFiles
       }
     } = this.props;
-
     getPersistHistoFiles();
     // drag and drop over app (other than drag and drop field) should be disabled:
     this.wrapper.addEventListener('dragover', this.preventEvent);
     this.wrapper.addEventListener('drop', this.preventEvent);
+    // get user name into state:
+    this.getCurrentUserName();
   }
 
   render() {
-    const { navModel, sideMenuToogled } = this.state;
+    const { navModel, sideMenuToogled, currentUser } = this.state;
     const { children, notifications } = this.props;
 
     return (
@@ -94,6 +97,31 @@ class App extends Component {
               )
             }
           </ul>
+
+          <NotificationStack
+            notifications={notifications.toJS()}
+            onDismiss={this.handlesOnNotificationDismiss}
+            activeBarStyleFactory={
+              (index, style) => {
+                return {
+                  ...style,
+                  bottom: `${90 - (5 * index)}%`,
+                  left: '20%',
+                  backgroundColor: '#4A4A4A'
+                };
+              }
+            }
+            barStyleFactory={
+              (index, style) => {
+                return {
+                  ...style,
+                  bottom: `${90 - (5 * index)}%`,
+                  left: '20%',
+                  backgroundColor: '#4A4A4A'
+                };
+              }
+            }
+          />
         </div>
 
         {/* <!-- Page content --> */}
@@ -103,47 +131,6 @@ class App extends Component {
             {children}
           </div>
         </div>
-        <NotificationStack
-          notifications={notifications.toJS()}
-          // notifications={[
-          //   {
-          //     key: 1,
-          //     message: 'test message ultra super sized to tets the limit of super ulatr sized message',
-          //     dismissAfter: 1000,
-          //     action: 'Dismiss',
-          //     onClick: ()=>console.log('should dispatch "query" delete notification key=1')
-          //   },
-          //   {
-          //     key: 2,
-          //     message: 'test message',
-          //     dismissAfter: 1000,
-          //     action: 'Dismiss',
-          //     onClick: ()=>console.log('should dispatch "query" delete notification key=2')
-          //   }
-          // ]
-          // }
-          onDismiss={this.handlesOnNotificationDismiss}
-          activeBarStyleFactory={
-            (index, style) => {
-              return {
-                ...style,
-                bottom: `${90 - (5 * index)}%`,
-                left: '20%',
-                backgroundColor: '#4A4A4A'
-              };
-            }
-          }
-          barStyleFactory={
-            (index, style) => {
-              return {
-                ...style,
-                bottom: `${90 - (5 * index)}%`,
-                left: '20%',
-                backgroundColor: '#4A4A4A'
-              };
-            }
-          }
-        />
       </div>
     );
   }
@@ -175,6 +162,12 @@ class App extends Component {
     // something to do here?
   }
   /* eslint-enable no-unused-vars*/
+
+  getCurrentUserName() {
+    username()
+      .then(user => this.setState({ currentUser: user }))
+      .catch(err => err);
+  }
 }
 
 // statics :
