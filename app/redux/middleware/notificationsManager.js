@@ -13,9 +13,11 @@
       action: 'Dismiss'
     }
  ------------------------------------------------------------------------------------------------------------- */
-const DEFAULT_DISMISS_TIME = 600;
+import appConfig from '../../config';
+
+const DEFAULT_DISMISS_TIME = appConfig.notifications.timeout;
 const DEFAULT_MESSAGE = '';
-const DEFAULT_ACTION = 'Dismiss';
+const DEFAULT_ACTION = appConfig.notifications.defaultAction;
 
 export const notificationManager = store => next => action => {
   if (action && action.showNotification) {

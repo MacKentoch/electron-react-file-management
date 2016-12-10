@@ -75,6 +75,7 @@ class History extends PureComponent {
                         <ListFiles
                           files={filteredHistoFiles.filter(file => file.date === dateRef)}
                           showDeleteButton={false}
+                          disableAnimation
                         />
                       }
                     </div>

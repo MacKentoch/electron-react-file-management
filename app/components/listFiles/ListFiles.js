@@ -65,7 +65,7 @@ class ListFiles extends PureComponent {
   }
 
   getStyle() {
-    const { files } = this.props;
+    const { files, disableAnimation } = this.props;
     return files.map(
       (file, fileIdx) => (
         {
@@ -77,8 +77,8 @@ class ListFiles extends PureComponent {
             size: file.size
           },
           style: {
-            height: spring(60, presets.gentle),
-            opacity: spring(1, presets.gentle)
+            height: disableAnimation === false ? spring(60, presets.gentle) : 60,
+            opacity: disableAnimation === false ? spring(1, presets.gentle) : 1
           }
         }
       )
@@ -93,9 +93,10 @@ class ListFiles extends PureComponent {
   }
 
   willLeave = () => {
+    const { disableAnimation } = this.props;
     return {
-      height: spring(0, presets.gentle),
-      opacity: spring(0, presets.gentle)
+      height: disableAnimation === false ? spring(0, presets.gentle) : 0,
+      opacity: disableAnimation === false ? spring(0, presets.gentle) : 0
     };
   }
 }
@@ -111,11 +112,13 @@ ListFiles.propTypes = {
   //   })
   // ),
   showDeleteButton: PropTypes.bool,
-  onFileRemove: PropTypes.func
+  onFileRemove: PropTypes.func,
+  disableAnimation: PropTypes.bool
 };
 
 ListFiles.defaultProps = {
-  showDeleteButton: true
+  showDeleteButton: true,
+  disableAnimation: false
 };
 
 export default ListFiles;

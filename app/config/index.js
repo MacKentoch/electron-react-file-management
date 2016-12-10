@@ -46,7 +46,12 @@ const appConfig = {
     'bmp',
     'image/bmp',
     'image/x-windows-bmp'
-  ]
+  ],
+
+  notifications: {
+    timeout: 1000,
+    defaultAction: 'Dismiss'
+  }
 };
 
-export default appConfig
+export default appConfig;
