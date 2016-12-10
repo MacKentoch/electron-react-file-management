@@ -1,3 +1,4 @@
+/* eslint array-callback-return:0 */
 import { Map, List } from 'immutable';
 import moment from 'moment';
 import fs from 'fs';
@@ -116,10 +117,17 @@ export function getPersistHistoFiles() {
 }
 
 export function addfiles(files = List()) {
-  return {
-    type: ADD_NEW_FILES,
-    files
+  return (dispatch, getState) => {
+    const currentFiles = getState().files.get('files');
+    dispatch({
+      type: ADD_NEW_FILES,
+      files: preventDuplicateFiles(files, currentFiles)
+    });
   };
+}
+
+function preventDuplicateFiles(files, currentFiles) {
+  return files.filter(newFile => !currentFiles.some(prevFile => prevFile.name === newFile.name));
 }
 
 export function clearFileErrors() {
@@ -241,16 +249,18 @@ export function writeFiles(files = List([])) {
         const allFilePath = path.join(filePath, file.name);
         dispatch(requireWriteFile(file));
 
-        dispatch(writeFile(file, allFilePath))
-          .then(
-            successPayload => {
-              dispatch(confirmWriteFile(successPayload.file, successPayload.filePath));
-              dispatch(removeFileByFileName(file.name));
-              return true;
-            }
-          )
-          .catch(
-            errorPayload => dispatch(errorWriteFile(errorPayload.file, errorPayload.details))
+        dispatch(
+          writeFile(file, allFilePath)
+            .then(
+              successPayload => {
+                dispatch(confirmWriteFile(successPayload.file, successPayload.filePath));
+                dispatch(removeFileByFileName(file.name));
+                return true;
+              }
+            )
+            .catch(
+              errorPayload => dispatch(errorWriteFile(errorPayload.file, errorPayload.details))
+            )
           );
       });
   };

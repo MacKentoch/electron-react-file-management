@@ -2,6 +2,7 @@
 /* eslint react/sort-comp:0 */
 /* eslint arrow-body-style:0 */
 /* eslint react/no-unused-prop-types:0 */
+/* eslint max-len:0 */
 import React, { PureComponent, PropTypes } from 'react';
 import { List } from 'immutable';
 import moment from 'moment';
@@ -34,7 +35,7 @@ class History extends PureComponent {
 
   render() {
     const { animated, viewEntersAnim } = this.state;
-    const { histoFilter } = this.props;
+    const { histoFilter, actions: { changeHistoFilter } } = this.props;
 
     const filteredHistoFiles = this.filterHistoFiles(histoFilter).sort(this.sortFilesByDateAsc);
     const distinctFileDates = filteredHistoFiles.groupBy(file => file.date).keySeq();
@@ -51,24 +52,34 @@ class History extends PureComponent {
             />
             <HistoFilesFilterCmd
               selectedFilter={histoFilter}
-              onFilterSelect={() => console.log('todo')}
+              onFilterSelect={changeHistoFilter}
             />
             {
+              distinctFileDates.size === 0 &&
+              <h3 style={{ textAlign: 'center' }}>
+                No history yet...
+              </h3>
+            }
+            {
+              distinctFileDates.size > 0 &&
               distinctFileDates.map(
-                (dateRef, dateRefIdx) => (
-                  <div
-                    key={dateRefIdx}>
-                    <h3 style={{ textAlign: 'center' }}>
-                      {dateRef}
-                    </h3>
-                    {
-                      <ListFiles
-                        files={filteredHistoFiles.filter(file => file.date === dateRef)}
-                        showDeleteButton={false}
-                      />
-                    }
-                  </div>
-                )
+                (dateRef, dateRefIdx) => {
+                  const histoFilesForThisDateRef = filteredHistoFiles.filter(file => file.date === dateRef);
+                  return (
+                    <div
+                      key={dateRefIdx}>
+                      <h3 style={{ textAlign: 'center' }}>
+                        {`${dateRef} (${histoFilesForThisDateRef.size})`}
+                      </h3>
+                      {
+                        <ListFiles
+                          files={filteredHistoFiles.filter(file => file.date === dateRef)}
+                          showDeleteButton={false}
+                        />
+                      }
+                    </div>
+                  );
+                }
               )
             }
           </div>
