@@ -193,7 +193,7 @@ function confirmWriteFile(file, filePath = '') {
       // notification (middleware):
       showNotification: {
         message: `${file.name} copied`,
-        dismissAfter: 1000,
+        // dismissAfter: 1000,
         action: 'DONE'
       }
     });
@@ -208,7 +208,7 @@ function errorWriteFile(file, details = '') {
     // notification (middleware):
     showNotification: {
       message: `ERROR: ${file.name} not copied...`,
-      dismissAfter: 1000,
+      // dismissAfter: 1000,
       action: 'RETRY LATER'
     }
   };
