@@ -4,7 +4,7 @@
   "env": {
     "production": {
       "presets": ["react-optimize"],
-      "plugins": ["babel-plugin-dev-expression"]
+      "plugins": ["babel-plugin-dev-expression", "transform-flow-strip-types"]
     },
     "development": {
       "presets": ["react-hmre"]

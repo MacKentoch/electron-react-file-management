@@ -1,17 +1,9 @@
 /* eslint arrow-body-style:0 */
+/* eslint import/prefer-default-export:0 */
 import sql from 'mssql';
+import appConfig from '../config';
 
-const config = {
-  user: '...',
-  password: '...',
-  server: '...', // You can use 'localhost\\instance' to connect to named instance
-  database: '...'
-  // options: {
-  //     encrypt: true // Use this if you're on Windows Azure
-  // }
-};
-
-function getUser(username = '') {
+export function getUser(username:string = '') {
   return new Promise(
     (resolve, reject) => {
       if (username.length === 0) {
@@ -19,23 +11,20 @@ function getUser(username = '') {
       }
 
       sql
-        .connect(config)
+        .connect(appConfig.mssqlConfig)
         .then(
           () => {
             return new sql
                   .Request()
                   .input('username', sql.VarChar(255), username)
                   .query('select * from users where username = @username')
-                  .then(function(recordset) {
-                    return resolve(recordset);
-                  }).catch(function(err) {
-                    return reject({ error: err });
-                  });
+                  .then((recordset) => resolve(recordset))
+                  .catch((err) => reject({ error: err }));
           }
         )
         .catch(
           err => reject({ error: err })
         );
-      }
-    );
+    }
+  );
 }
